@@ -1,18 +1,20 @@
 import { Module } from '@nestjs/common';
-import { UsersController } from './api/users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// import { UsersRepository } from './infrastructure/users.repository';
 import { UsersService } from './application/users.service';
 import { UsersEntity } from './domain/entity/users.entity';
 
-const useCases = [];
+import { UsersRepository } from './infrastructure/users.repository';
+import { CreateUsersUseCase } from './application/useCases/CreateUser.use-case';
+import { UsersController } from './api/users.controller';
 
-const adapters = [];
+const useCases = [CreateUsersUseCase];
+
+const adapters = [UsersRepository];
 
 @Module({
 	imports: [TypeOrmModule.forFeature([UsersEntity])],
 	controllers: [UsersController],
 	providers: [UsersService, ...useCases, ...adapters],
-	exports: [UsersService],
+	exports: [],
 })
 export class UsersModule {}

@@ -6,7 +6,7 @@ import { UserInputModel } from './models/user.input-model';
 
 @Entity({ name: 'users' })
 export class UsersEntity extends MyBaseEntity implements IUser {
-	@Column({ unique: true })
+	@Column()
 	email: string;
 
 	@Column()
