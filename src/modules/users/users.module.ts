@@ -15,6 +15,6 @@ const adapters = [UsersRepository];
 	imports: [TypeOrmModule.forFeature([UsersEntity])],
 	controllers: [UsersController],
 	providers: [UsersService, ...useCases, ...adapters],
-	exports: [CreateUsersUseCase],
+	exports: [CreateUsersUseCase, UsersRepository, UsersService],
 })
 export class UsersModule {}

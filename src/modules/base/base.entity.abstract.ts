@@ -6,9 +6,9 @@ export abstract class MyBaseEntity extends BaseEntity implements IBaseEntity {
 	@PrimaryGeneratedColumn()
 	id: string;
 
-	@Column({ nullable: true })
+	@Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true })
 	createdAt: Date;
 
-	@Column({ nullable: true })
+	@Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true })
 	updatedAt: Date;
 }

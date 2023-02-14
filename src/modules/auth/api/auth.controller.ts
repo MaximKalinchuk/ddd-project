@@ -9,9 +9,9 @@ export class AuthController {
 
 	@Post('registration')
 	async registration(@Body() userData: CreateUserInputModel): Promise<AccessToken> {
-		const user = await this.registrationUseCase.execute(userData);
+		const tokens = await this.registrationUseCase.execute(userData);
 		return {
-			access_token: '123',
+			access_token: tokens.access_token,
 		};
 	}
 }

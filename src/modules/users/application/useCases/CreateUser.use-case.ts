@@ -15,7 +15,7 @@ export class CreateUsersUseCase {
 			email: userData.email,
 			username: userData.username,
 			role: UserRole.USER,
-			refresh_token: 'dasdasd',
+			refresh_token: null,
 			passwordHash: userData.password,
 		};
 		const newUser = new UsersEntity(userParams);
