@@ -3,7 +3,6 @@ import { CreateUsersUseCase } from '../../../users/application/useCases/CreateUs
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersRepository } from '../../../users/infrastructure/users.repository';
 import { TokensViewModel } from '../dto/tokens.view-model';
-import { UsersService } from 'src/modules/users/application/users.service';
 import { AuthService } from '../auth.service';
 
 @Injectable()
@@ -23,6 +22,8 @@ export class RegistrationUseCase {
 
 		const newUser = await this.createUsersUseCase.execute(userData);
 		const tokens = await this.authService.generateTokens(newUser);
+		await this.authService.updateRefreshInDataBase(tokens.refresh_token, newUser);
+
 		return tokens;
 	}
 }

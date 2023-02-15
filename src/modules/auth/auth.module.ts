@@ -3,9 +3,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './api/auth.controller';
 import { AuthService } from './application/auth.service';
+import { LoginUseCase } from './application/useCases/login.use-case';
 import { RegistrationUseCase } from './application/useCases/registration.use-case';
 
-const useCases = [RegistrationUseCase];
+const useCases = [RegistrationUseCase, LoginUseCase];
 const adapters = [];
 
 @Module({

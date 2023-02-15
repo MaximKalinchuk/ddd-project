@@ -2,10 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersEntity } from 'src/modules/users/domain/entity/users.entity';
+import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
 import { TokensViewModel } from './dto/tokens.view-model';
 @Injectable()
 export class AuthService {
-	constructor(private readonly jwtService: JwtService, private readonly configService: ConfigService) {}
+	constructor(
+		private readonly jwtService: JwtService,
+		private readonly configService: ConfigService,
+		private readonly usersRepository: UsersRepository,
+	) {}
 
 	async generateTokens(user: UsersEntity): Promise<TokensViewModel> {
 		const payload = { id: user.id, username: user.username, email: user.email, role: user.role };
@@ -28,5 +33,10 @@ export class AuthService {
 			access_token,
 			refresh_token,
 		};
+	}
+
+	async updateRefreshInDataBase(token: string, newUser: UsersEntity): Promise<void> {
+		newUser.setRefreshToken(token);
+		await this.usersRepository.save(newUser);
 	}
 }
