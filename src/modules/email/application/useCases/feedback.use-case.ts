@@ -19,6 +19,5 @@ export class FeedbackUseCase {
 			subject: `${sendData.email}: ${sendData.subject}`, // Subject line
 			html: sendData.message, // html body
 		});
-		console.log(info);
 	}
 }

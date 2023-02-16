@@ -3,16 +3,22 @@ import { LoginInputModel } from '../../api/models/login.input-model';
 import { AuthService } from '../auth.service';
 import { TokensViewModel } from '../dto/tokens.view-model';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+const bcrypt = require('bcrypt');
 
 @Injectable()
 export class LoginUseCase {
 	constructor(private readonly usersRepository: UsersRepository, private readonly authService: AuthService) {}
 
 	async execute(userData: LoginInputModel): Promise<TokensViewModel> {
-		console.log(userData);
 		const userByEmail = await this.usersRepository.findOne({ where: { email: userData.email } });
 		if (!userByEmail) {
 			throw new HttpException('This user is not exist', HttpStatus.UNAUTHORIZED);
+		}
+
+		const isPasswordValid = await bcrypt.compare(userData.password, userByEmail.passwordHash);
+
+		if (!isPasswordValid) {
+			throw new HttpException('Wrong password', HttpStatus.UNAUTHORIZED);
 		}
 
 		return await this.authService.generateTokens(userByEmail);
