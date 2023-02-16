@@ -5,63 +5,63 @@ import { IUser } from '../interfaces/user.interface';
 import { UserInputModel } from './models/user.input-model';
 
 @Entity({ name: 'users' })
-export class UsersEntity extends MyBaseEntity implements IUser {
+export class UsersEntity extends MyBaseEntity {
 	@Column()
-	email: string;
+	private _email: string = this.email;
 
 	@Column()
-	passwordHash: string;
+	private _passwordHash: string = this.passwordHash;
 
 	@Column()
-	username: string;
-
-	@Column()
-	role: UserRole;
+	private _username: string = this.username;
 
 	@Column({ default: null, nullable: true })
-	refresh_token: string | null;
+	private _refreshToken: string = this.refreshToken;
+
+	@Column()
+	private _role: UserRole = this.role;
 
 	constructor(userParams?: UserInputModel) {
 		super();
 
 		if (userParams) {
-			this.username = userParams.username;
+			this.username = userParams.username ?? '';
 			this.email = userParams.email ?? '';
 			this.passwordHash = userParams.passwordHash ?? '';
 			this.role = userParams.role ?? UserRole.USER;
-			this.refresh_token = userParams.refresh_token ?? null;
+			this.refreshToken = userParams.refresh_token ?? null;
 		}
 	}
-	getPasswordHash(): string {
-		return this.passwordHash;
+	get passwordHash(): string {
+		return this._passwordHash;
 	}
-	setPasswordHash(hash: string): void {
-		this.passwordHash = hash;
+	set passwordHash(hash: string) {
+		this._passwordHash = hash;
 	}
-	getRole(): string {
-		return this.role;
+	get role(): UserRole {
+		return this._role;
 	}
-	setRole(role: UserRole): void {
-		this.role = role;
+	set role(role: UserRole) {
+		this._role = role;
 	}
-	getRefreshToken(): string {
-		return this.refresh_token;
+	get refreshToken(): string {
+		return this._refreshToken;
 	}
-	setRefreshToken(token: string): void {
-		this.refresh_token = token;
-	}
-
-	getEmail(): string {
-		return this.email;
-	}
-	setEmail(email: string): void {
-		this.email = email;
+	set refreshToken(token: string) {
+		this._refreshToken = token;
 	}
 
-	getUsername(): string {
-		return this.username;
+	get email(): string {
+		return this._email;
 	}
-	setUsername(username: string): void {
-		this.username = username;
+	set email(email: string) {
+		this._email = email;
+	}
+
+	get username(): string {
+		return this._username;
+	}
+	set username(username: string) {
+		this._username = username;
 	}
 }

@@ -18,6 +18,7 @@ export class CreateUsersUseCase {
 			refresh_token: null,
 			passwordHash: userData.password,
 		};
+		console.log(userParams);
 		const newUser = new UsersEntity(userParams);
 		return await this.usersRepository.save(newUser);
 	}
