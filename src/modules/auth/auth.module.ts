@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { EmailModule } from '../email/email.module';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './api/auth.controller';
 import { AuthService } from './application/auth.service';
@@ -11,7 +12,7 @@ const useCases = [RegistrationUseCase, LoginUseCase, RefreshUseCase];
 const adapters = [];
 
 @Module({
-	imports: [UsersModule, JwtModule.register({})],
+	imports: [UsersModule, JwtModule.register({}), EmailModule],
 	controllers: [AuthController],
 	providers: [AuthService, ...useCases, ...adapters],
 	exports: [],

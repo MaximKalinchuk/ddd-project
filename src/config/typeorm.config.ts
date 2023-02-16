@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import { ConfirmationEntity } from 'src/modules/email/domain/entity/confirmations.entity';
 import { UsersEntity } from '../modules/users/domain/entity/users.entity';
 
 export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
@@ -10,7 +11,7 @@ export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
 		username: configService.get('PG_USERNAME'),
 		password: configService.get('PG_PASSWORD'),
 		database: configService.get('PG_DATABASE'),
-		entities: [UsersEntity],
+		entities: [UsersEntity, ConfirmationEntity],
 		synchronize: true,
 		// migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
 		// cli: {

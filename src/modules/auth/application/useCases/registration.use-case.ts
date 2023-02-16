@@ -4,6 +4,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersRepository } from '../../../users/infrastructure/users.repository';
 import { TokensViewModel } from '../dto/tokens.view-model';
 import { AuthService } from '../auth.service';
+import { ConfirmationEntity } from '../../../email/domain/entity/confirmations.entity';
+import { ConfirmationInputModel } from 'src/modules/email/domain/entity/models/confirmations.input-model';
+import { ConfirmationRepository } from '../../../email/infrastructure/confirmations.repository';
 
 @Injectable()
 export class RegistrationUseCase {
@@ -11,6 +14,7 @@ export class RegistrationUseCase {
 		private readonly createUsersUseCase: CreateUsersUseCase,
 		private readonly usersRepository: UsersRepository,
 		private readonly authService: AuthService,
+		private readonly confirmationRepository: ConfirmationRepository,
 	) {}
 	async execute(userData: CreateUserInputModel): Promise<TokensViewModel> {
 		const userByEmail = await this.usersRepository.findOne({ where: { email: userData.email } });
@@ -21,6 +25,15 @@ export class RegistrationUseCase {
 		}
 
 		const newUser = await this.createUsersUseCase.execute(userData);
+
+		const confirmationParams: ConfirmationInputModel = {
+			userId: +newUser.id,
+			confirmationCode: '123',
+			isConfirmed: false,
+		};
+		const confirmation = new ConfirmationEntity(confirmationParams);
+		await this.confirmationRepository.save(confirmation);
+
 		const tokens = await this.authService.generateTokens(newUser);
 		await this.authService.updateRefreshInDataBase(tokens.refresh_token, newUser);
 
