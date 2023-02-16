@@ -36,7 +36,7 @@ export class AuthService {
 	}
 
 	async updateRefreshInDataBase(token: string, newUser: UsersEntity): Promise<void> {
-		newUser.refreshToken = token;
+		newUser.setRefreshToken(token);
 		await this.usersRepository.save(newUser);
 	}
 }

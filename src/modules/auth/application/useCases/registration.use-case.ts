@@ -19,7 +19,7 @@ export class RegistrationUseCase {
 		if (userByEmail || userByUsername) {
 			throw new HttpException('This user is already registered', HttpStatus.BAD_REQUEST);
 		}
-		console.log('aasdas');
+
 		const newUser = await this.createUsersUseCase.execute(userData);
 		const tokens = await this.authService.generateTokens(newUser);
 		await this.authService.updateRefreshInDataBase(tokens.refresh_token, newUser);
