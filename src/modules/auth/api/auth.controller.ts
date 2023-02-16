@@ -1,15 +1,21 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { CreateUserInputModel } from 'src/modules/users/api/models/createUser.input-modal';
 import { AccessToken } from '../application/dto/registration.view-model';
 import { RegistrationUseCase } from '../application/useCases/registration.use-case';
 import { LoginInputModel } from './models/login.input-model';
 import { LoginUseCase } from '../application/useCases/login.use-case';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { RefreshUseCase } from '../application/useCases/refresh.use-case';
 
 @Controller('auth')
 export class AuthController {
-	constructor(private readonly registrationUseCase: RegistrationUseCase, private readonly loginUseCase: LoginUseCase) {}
+	constructor(
+		private readonly registrationUseCase: RegistrationUseCase,
+		private readonly loginUseCase: LoginUseCase,
+		private readonly refreshUseCase: RefreshUseCase,
+	) {}
 
+	@HttpCode(201)
 	@Post('registration')
 	async registration(
 		@Body() userData: CreateUserInputModel,
@@ -25,6 +31,7 @@ export class AuthController {
 		};
 	}
 
+	@HttpCode(200)
 	@Post('login')
 	async login(@Body() userData: LoginInputModel, @Res({ passthrough: true }) res: Response): Promise<AccessToken> {
 		const tokens = await this.loginUseCase.execute(userData);
@@ -32,6 +39,22 @@ export class AuthController {
 			maxAge: 3600 * 1000 * 168,
 			httpOnly: true,
 		});
+		return {
+			access_token: tokens.access_token,
+		};
+	}
+
+	@HttpCode(200)
+	@Post('refresh')
+	async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<AccessToken> {
+		const refresh_token = req.cookies.refresh_token;
+		const tokens = await this.refreshUseCase.execute(refresh_token);
+
+		res.cookie('refresh_token', tokens.refresh_token, {
+			maxAge: 3600 * 1000 * 168,
+			httpOnly: true,
+		});
+
 		return {
 			access_token: tokens.access_token,
 		};

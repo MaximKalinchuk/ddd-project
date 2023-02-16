@@ -12,7 +12,7 @@ export class LoginUseCase {
 	async execute(userData: LoginInputModel): Promise<TokensViewModel> {
 		const userByEmail = await this.usersRepository.findOne({ where: { email: userData.email } });
 		if (!userByEmail) {
-			throw new HttpException('This user is not exist', HttpStatus.UNAUTHORIZED);
+			throw new HttpException('This user was not found', HttpStatus.NOT_FOUND);
 		}
 
 		const isPasswordValid = await bcrypt.compare(userData.password, userByEmail.passwordHash);

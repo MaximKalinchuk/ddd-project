@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersEntity } from 'src/modules/users/domain/entity/users.entity';
 import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
+import { RefreshTokenViewModel } from './dto/refreshDecode.view-model';
 import { TokensViewModel } from './dto/tokens.view-model';
 @Injectable()
 export class AuthService {
@@ -38,5 +39,16 @@ export class AuthService {
 	async updateRefreshInDataBase(token: string, newUser: UsersEntity): Promise<void> {
 		newUser.setRefreshToken(token);
 		await this.usersRepository.save(newUser);
+	}
+
+	async decodeToken(token: string): Promise<RefreshTokenViewModel> {
+		try {
+			const decodeUser = this.jwtService.verify(token, {
+				secret: this.configService.get<string>('PRIVATE_REFRESH_KEY'),
+			});
+			return decodeUser;
+		} catch (e) {
+			throw new UnauthorizedException();
+		}
 	}
 }
