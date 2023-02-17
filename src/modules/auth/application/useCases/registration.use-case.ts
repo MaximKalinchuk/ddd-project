@@ -24,7 +24,7 @@ export class RegistrationUseCase {
 		const userByUsername = await this.usersRepository.findOne({ where: { username: userData.username } });
 
 		if (userByEmail || userByUsername) {
-			throw new HttpException('This user is already registered', HttpStatus.BAD_REQUEST);
+			throw new HttpException('This user is already registered.', HttpStatus.BAD_REQUEST);
 		}
 
 		const newUser = await this.createUsersUseCase.execute(userData);
@@ -36,7 +36,17 @@ export class RegistrationUseCase {
 		};
 		const confirmation = new ConfirmationEntity(confirmationParams);
 		await this.confirmationRepository.save(confirmation);
-		await this.sendConfirmationLinkUseCase.execute(newUser.email, confirmationParams.confirmationCode);
+
+		try {
+			await this.sendConfirmationLinkUseCase.execute(newUser.email, confirmationParams.confirmationCode);
+		} catch (e) {
+			const confirmation = await this.confirmationRepository.findOne({ where: { userId: +newUser.id } });
+			await this.confirmationRepository.remove(confirmation);
+
+			await this.usersRepository.remove(newUser);
+
+			throw new HttpException('Failed to send email confirmation message.', HttpStatus.BAD_REQUEST);
+		}
 
 		const tokens = await this.authService.generateTokens(newUser);
 		await this.authService.updateRefreshInDataBase(tokens.refresh_token, newUser);

@@ -1,10 +1,12 @@
-import { Column, Entity } from 'typeorm';
-import { MyBaseEntity } from '../../../base/base.entity.abstract';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { IConfirmation } from '../interfaces/confirmations.interface';
 import { ConfirmationInputModel } from './models/confirmations.input-model';
 
 @Entity('confirmations')
-export class ConfirmationEntity extends MyBaseEntity implements IConfirmation {
+export class ConfirmationEntity extends BaseEntity implements IConfirmation {
+	@PrimaryGeneratedColumn()
+	id: number;
+
 	@Column()
 	userId: number;
 

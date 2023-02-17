@@ -15,8 +15,11 @@ export class SendConfirmationLinkUseCase {
 		let info = await transporter.sendMail({
 			to: email,
 			subject: 'Bravo-Soft: Подтвердите ваш Email',
-			html: `<a href="http://localhost:5000/email/confirmation/${confirmationCode}"><b>Ссылка для подтверждения почты</b></a>.`,
+			html: `<p><b>Подтвердите ваш почту, для продолжения работы:</b></p><br>
+			<a href="http://localhost:5000/email/confirmation/${confirmationCode}">Ссылка для подтверждения почты</a>.<br>
+			<p>Если аккаунт не активировался, попробуйте зарегистрироваться занова или использовать новую почту. 
+			Также сообщите о проблеме администрации проекта. Спасибо!</p>
+			`,
 		});
-		console.log(info);
 	}
 }

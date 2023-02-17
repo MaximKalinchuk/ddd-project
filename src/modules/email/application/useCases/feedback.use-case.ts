@@ -8,16 +8,15 @@ export class FeedbackUseCase {
 		let transporter = nodemailer.createTransport({
 			service: 'gmail',
 			auth: {
-				user: 'alexshowmanbis@gmail.com', // generated ethereal user
-				pass: 'zrmyokufmifqyzzq', // generated ethereal password
+				user: 'alexshowmanbis@gmail.com',
+				pass: 'zrmyokufmifqyzzq',
 			},
 		});
 
-		// send mail with defined transport object
 		let info = await transporter.sendMail({
-			to: 'kalinchuk.maxim@mail.ru', // list of receivers
-			subject: `${sendData.email}: ${sendData.subject}`, // Subject line
-			html: sendData.message, // html body
+			to: 'kalinchuk.maxim@mail.ru',
+			subject: `${sendData.email}: ${sendData.subject}`,
+			html: sendData.message,
 		});
 	}
 }
