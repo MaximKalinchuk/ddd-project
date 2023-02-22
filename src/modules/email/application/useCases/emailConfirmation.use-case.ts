@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfirmationRepository } from '../../infrastructure/confirmations.repository';
 
 @Injectable()
-export class ConfirmationUseCase {
+export class EmailConfirmationUseCase {
 	constructor(private readonly confirmationRepository: ConfirmationRepository) {}
 
 	async execute(confirmationCode: string): Promise<void> {

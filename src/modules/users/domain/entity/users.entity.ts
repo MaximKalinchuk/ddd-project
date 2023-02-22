@@ -1,8 +1,11 @@
 import { UserRole } from '../../../../constants/UserRole';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { MyBaseEntity } from '../../../base/base.entity.abstract';
 import { IUser } from '../interfaces/user.interface';
 import { UserInputModel } from './models/user.input-model';
+import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailConfirmation.entity';
+import { EmailConfirmationInputModel } from 'src/modules/email/domain/entity/models/confirmations.input-model';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity({ name: 'users' })
 export class UsersEntity extends MyBaseEntity implements IUser {
@@ -21,15 +24,22 @@ export class UsersEntity extends MyBaseEntity implements IUser {
 	@Column({ default: null, nullable: true })
 	refresh_token: string | null;
 
-	constructor(userParams?: UserInputModel) {
+	@OneToOne(() => EmailConfirmationEntity, (emailConfirmation) => emailConfirmation.user, {
+		cascade: true,
+	})
+	emailConfirmation: EmailConfirmationEntity;
+
+	constructor(userParams?: UserInputModel, emailParams?: EmailConfirmationInputModel) {
 		super();
 
-		if (userParams) {
+		if (userParams && emailParams) {
 			this.username = userParams.username;
 			this.email = userParams.email ?? '';
 			this.passwordHash = userParams.passwordHash ?? '';
 			this.role = userParams.role ?? UserRole.USER;
 			this.refresh_token = userParams.refresh_token ?? null;
+			console.log(this.id);
+			this.emailConfirmation = new EmailConfirmationEntity(this.id, emailParams.confirmationCode);
 		}
 	}
 	getPasswordHash(): string {

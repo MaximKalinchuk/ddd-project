@@ -1,5 +1,3 @@
-export class ConfirmationInputModel {
+export class EmailConfirmationInputModel {
 	confirmationCode: string;
-	isConfirmed: boolean;
-	userId: number;
 }

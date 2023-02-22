@@ -5,6 +5,8 @@ import { UsersEntity } from 'src/modules/users/domain/entity/users.entity';
 import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
 import { RefreshTokenViewModel } from './dto/refreshDecode.view-model';
 import { TokensViewModel } from './dto/tokens.view-model';
+const bcrypt = require('bcrypt');
+
 @Injectable()
 export class AuthService {
 	constructor(
@@ -37,7 +39,10 @@ export class AuthService {
 	}
 
 	async updateRefreshInDataBase(token: string, newUser: UsersEntity): Promise<void> {
-		newUser.setRefreshToken(token);
+		const tokenHash = await bcrypt.hash(token, 10);
+
+		newUser.setRefreshToken(tokenHash);
+		console.log(newUser);
 		await this.usersRepository.save(newUser);
 	}
 

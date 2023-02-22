@@ -3,12 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '../../base/base.repository.abstract';
 import { IConfirmationRepository } from './confirmations.repository.interface';
-import { ConfirmationEntity } from '../domain/entity/confirmations.entity';
+import { EmailConfirmationEntity } from '../domain/entity/emailConfirmation.entity';
 
 @Injectable()
-export class ConfirmationRepository extends BaseRepository<ConfirmationEntity> implements IConfirmationRepository {
+export class ConfirmationRepository extends BaseRepository<EmailConfirmationEntity> implements IConfirmationRepository {
 	constructor(
-		@InjectRepository(ConfirmationEntity) private readonly confirmationRepoasitory: Repository<ConfirmationEntity>,
+		@InjectRepository(EmailConfirmationEntity)
+		private readonly confirmationRepoasitory: Repository<EmailConfirmationEntity>,
 	) {
 		super(confirmationRepoasitory);
 	}

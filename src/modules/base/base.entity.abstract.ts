@@ -3,7 +3,7 @@ import { IBaseEntity } from './interface/base.entity.interface';
 
 @Entity()
 export abstract class MyBaseEntity extends BaseEntity implements IBaseEntity {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
 	@Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true })

@@ -1,7 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
-import { ConfirmationEntity } from 'src/modules/email/domain/entity/confirmations.entity';
+import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailConfirmation.entity';
 import { UsersEntity } from '../modules/users/domain/entity/users.entity';
+import { PasswordRecoveryEntity } from '../modules/email/domain/entity/passwordRecovery.entity';
 
 export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
 	useFactory: (configService: ConfigService) => ({
@@ -11,7 +12,13 @@ export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
 		username: configService.get('PG_USERNAME'),
 		password: configService.get('PG_PASSWORD'),
 		database: configService.get('PG_DATABASE'),
-		entities: [UsersEntity, ConfirmationEntity],
+		_entities: [UsersEntity, EmailConfirmationEntity, PasswordRecoveryEntity],
+		get entities() {
+			return this._entities;
+		},
+		set entities(value) {
+			this._entities = value;
+		},
 		synchronize: true,
 		// migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
 		// cli: {

@@ -4,11 +4,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersRepository } from '../../../users/infrastructure/users.repository';
 import { TokensViewModel } from '../dto/tokens.view-model';
 import { AuthService } from '../auth.service';
-import { ConfirmationEntity } from '../../../email/domain/entity/confirmations.entity';
-import { ConfirmationInputModel } from 'src/modules/email/domain/entity/models/confirmations.input-model';
 import { ConfirmationRepository } from '../../../email/infrastructure/confirmations.repository';
-import { v4 as uuidv4 } from 'uuid';
-import { SendConfirmationLinkUseCase } from '../../../email/application/useCases/sendConfirmationLink.use-case';
+import { SendEmailConfirmationLinkUseCase } from '../../../email/application/useCases/sendConfirmationLink.use-case';
 
 @Injectable()
 export class RegistrationUseCase {
@@ -17,7 +14,7 @@ export class RegistrationUseCase {
 		private readonly usersRepository: UsersRepository,
 		private readonly authService: AuthService,
 		private readonly confirmationRepository: ConfirmationRepository,
-		private readonly sendConfirmationLinkUseCase: SendConfirmationLinkUseCase,
+		private readonly sendEmailConfirmationLinkUseCase: SendEmailConfirmationLinkUseCase,
 	) {}
 	async execute(userData: CreateUserInputModel): Promise<TokensViewModel> {
 		const userByEmail = await this.usersRepository.findOne({ where: { email: userData.email } });
@@ -29,28 +26,10 @@ export class RegistrationUseCase {
 
 		const newUser = await this.createUsersUseCase.execute(userData);
 
-		const confirmationParams: ConfirmationInputModel = {
-			userId: +newUser.id,
-			confirmationCode: uuidv4(),
-			isConfirmed: false,
-		};
-		const confirmation = new ConfirmationEntity(confirmationParams);
-		await this.confirmationRepository.save(confirmation);
-
-		try {
-			await this.sendConfirmationLinkUseCase.execute(newUser.email, confirmationParams.confirmationCode);
-		} catch (e) {
-			const confirmation = await this.confirmationRepository.findOne({ where: { userId: +newUser.id } });
-			await this.confirmationRepository.remove(confirmation);
-
-			await this.usersRepository.remove(newUser);
-
-			throw new HttpException('Failed to send email confirmation message.', HttpStatus.BAD_REQUEST);
-		}
-
+		await this.sendEmailConfirmationLinkUseCase.execute(newUser.email, newUser.emailConfirmation.confirmationCode);
 		const tokens = await this.authService.generateTokens(newUser);
-		await this.authService.updateRefreshInDataBase(tokens.refresh_token, newUser);
 
+		await this.authService.updateRefreshInDataBase(tokens.refresh_token, newUser);
 		return tokens;
 	}
 }

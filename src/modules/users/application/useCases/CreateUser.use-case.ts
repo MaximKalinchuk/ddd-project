@@ -4,7 +4,9 @@ import { UsersEntity } from '../../domain/entity/users.entity';
 import { UserInputModel } from '../../domain/entity/models/user.input-model';
 import { UserRole } from 'src/constants/UserRole';
 import { Injectable } from '@nestjs/common';
+import { EmailConfirmationInputModel } from 'src/modules/email/domain/entity/models/confirmations.input-model';
 const bcrypt = require('bcrypt');
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class CreateUsersUseCase {
@@ -19,7 +21,14 @@ export class CreateUsersUseCase {
 			refresh_token: null,
 			passwordHash,
 		};
-		const newUser = new UsersEntity(userParams);
+		const confirmationParams: EmailConfirmationInputModel = {
+			confirmationCode: uuidv4(),
+		};
+
+		// const confirmation = new EmailConfirmationEntity(confirmationParams);
+		// await this.confirmationRepository.save(confirmation);
+
+		const newUser = new UsersEntity(userParams, confirmationParams);
 		return await this.usersRepository.save(newUser);
 	}
 }

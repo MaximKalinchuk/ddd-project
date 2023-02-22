@@ -26,7 +26,7 @@ export class LoginUseCase {
 			throw new HttpException('Wrong password', HttpStatus.UNAUTHORIZED);
 		}
 
-		const confirmation = await this.confirmationRepository.findOne({ where: { userId: +userByEmail.id } });
+		const confirmation = await this.confirmationRepository.findOne({ where: { userId: userByEmail.id } });
 
 		if (!confirmation.isConfirmed) {
 			throw new HttpException(

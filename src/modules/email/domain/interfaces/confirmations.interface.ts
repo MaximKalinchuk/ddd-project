@@ -1,6 +1,6 @@
 export interface IConfirmation {
-	id: number;
+	id: string;
 	confirmationCode: string;
 	isConfirmed: boolean;
-	userId: number;
+	userId: string;
 }
