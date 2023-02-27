@@ -19,7 +19,7 @@ export class SendEmailConfirmationLinkUseCase {
 				to: email,
 				subject: 'Bravo-Soft: Подтвердите ваш Email',
 				html: `<p><b>Подтвердите ваш почту, для продолжения работы:</b></p><br>
-			<a href="http://localhost:5000/email/confirmation/${confirmationCode}">Ссылка для подтверждения почты</a>.<br>
+			<a href="http://localhost:5000/email/emailConfirmation/${confirmationCode}">Ссылка для подтверждения почты</a>.<br>
 			<p>Если аккаунт не активировался, попробуйте зарегистрироваться заново или использовать новую почту. 
 			Также сообщите о проблеме администрации проекта. Спасибо!</p>
 			`,

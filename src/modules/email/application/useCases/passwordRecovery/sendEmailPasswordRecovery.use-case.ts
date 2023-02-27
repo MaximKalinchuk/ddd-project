@@ -37,7 +37,7 @@ export class SendEmailPasswordRecoveryLinkUseCase {
 				to: userData.email,
 				subject: 'Bravo-Soft: Восстановление пароля',
 				html: `<p><b>Подтвердите новый пароль:</b></p><br>
-			<a href="http://localhost:5000/email/conformation/password/${confirmationCode}">Ссылка для замены пароля</a>.<br>
+			<a href="http://localhost:5000/email/confirmation/password/${confirmationCode}">Ссылка для замены пароля</a>.<br>
 			<p>Если аккаунт не активировался, попробуйте зарегистрироваться заново или использовать новую почту. 
 			Также сообщите о проблеме администрации проекта. Спасибо!</p>
 			`,
