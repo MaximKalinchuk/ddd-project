@@ -42,7 +42,6 @@ export class AuthService {
 		const tokenHash = await bcrypt.hash(token, 10);
 
 		newUser.setRefreshToken(tokenHash);
-		console.log(newUser);
 		await this.usersRepository.save(newUser);
 	}
 

@@ -29,6 +29,7 @@ export class CreateUsersUseCase {
 		// await this.confirmationRepository.save(confirmation);
 
 		const newUser = new UsersEntity(userParams, confirmationParams);
+		console.log(newUser);
 		return await this.usersRepository.save(newUser);
 	}
 }

@@ -6,6 +6,7 @@ import { UserInputModel } from './models/user.input-model';
 import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailConfirmation.entity';
 import { EmailConfirmationInputModel } from 'src/modules/email/domain/entity/models/confirmations.input-model';
 import { v4 as uuidv4 } from 'uuid';
+import { PasswordRecoveryEntity } from 'src/modules/email/domain/entity/passwordRecovery.entity';
 
 @Entity({ name: 'users' })
 export class UsersEntity extends MyBaseEntity implements IUser {
@@ -29,6 +30,11 @@ export class UsersEntity extends MyBaseEntity implements IUser {
 	})
 	emailConfirmation: EmailConfirmationEntity;
 
+	@OneToOne(() => PasswordRecoveryEntity, (passwordRecovery) => passwordRecovery.user, {
+		cascade: true,
+	})
+	passwordRecovery: PasswordRecoveryEntity;
+
 	constructor(userParams?: UserInputModel, emailParams?: EmailConfirmationInputModel) {
 		super();
 
@@ -38,8 +44,8 @@ export class UsersEntity extends MyBaseEntity implements IUser {
 			this.passwordHash = userParams.passwordHash ?? '';
 			this.role = userParams.role ?? UserRole.USER;
 			this.refresh_token = userParams.refresh_token ?? null;
-			console.log(this.id);
 			this.emailConfirmation = new EmailConfirmationEntity(this.id, emailParams.confirmationCode);
+			this.passwordRecovery = new PasswordRecoveryEntity(this.id);
 		}
 	}
 	getPasswordHash(): string {

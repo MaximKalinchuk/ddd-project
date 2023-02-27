@@ -5,16 +5,25 @@ import { FeedbackUseCase } from './application/useCases/feedback.use-case';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmailConfirmationEntity } from './domain/entity/emailConfirmation.entity';
 import { ConfirmationRepository } from './infrastructure/confirmations.repository';
-import { SendEmailConfirmationLinkUseCase } from './application/useCases/sendConfirmationLink.use-case';
-import { EmailConfirmationUseCase } from './application/useCases/emailConfirmation.use-case';
+import { EmailConfirmationUseCase } from './application/useCases/emailConformation/emailConfirmation.use-case';
 import { UsersModule } from '../users/users.module';
-import { PasswordRecoveryUseCase } from './application/useCases/passwordRecovery.use-case';
+import { PasswordRecoveryEntity } from './domain/entity/passwordRecovery.entity';
+import { PasswordConformationUseCase } from './application/useCases/passwordRecovery/passwordConformation.use-case';
+import { SendEmailConfirmationLinkUseCase } from './application/useCases/emailConformation/sendEmailConfirmationLink.use-case';
+import { SendEmailPasswordRecoveryLinkUseCase } from './application/useCases/passwordRecovery/sendEmailPasswordRecovery.use-case';
+import { PasswordRepository } from './infrastructure/password.repository';
 
-const useCases = [FeedbackUseCase, SendEmailConfirmationLinkUseCase, EmailConfirmationUseCase, PasswordRecoveryUseCase];
-const adapters = [ConfirmationRepository];
+const useCases = [
+	FeedbackUseCase,
+	SendEmailConfirmationLinkUseCase,
+	EmailConfirmationUseCase,
+	SendEmailPasswordRecoveryLinkUseCase,
+	PasswordConformationUseCase,
+];
+const adapters = [ConfirmationRepository, PasswordRepository];
 
 @Module({
-	imports: [TypeOrmModule.forFeature([EmailConfirmationEntity]), UsersModule],
+	imports: [TypeOrmModule.forFeature([EmailConfirmationEntity, PasswordRecoveryEntity]), UsersModule],
 	controllers: [EmailController],
 	providers: [EmailService, ...useCases, ...adapters],
 	exports: [ConfirmationRepository, SendEmailConfirmationLinkUseCase, EmailConfirmationUseCase],

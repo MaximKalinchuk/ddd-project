@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { ConfirmationRepository } from '../../infrastructure/confirmations.repository';
+import { ConfirmationRepository } from '../../../infrastructure/confirmations.repository';
 
 @Injectable()
 export class EmailConfirmationUseCase {

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '../../base/base.repository.abstract';
 import { IConfirmationRepository } from './confirmations.repository.interface';
+import { PasswordRecoveryEntity } from '../domain/entity/passwordRecovery.entity';
 import { EmailConfirmationEntity } from '../domain/entity/emailConfirmation.entity';
 
 @Injectable()

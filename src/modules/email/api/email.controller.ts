@@ -1,15 +1,18 @@
 import { Body, Controller, Param, Post, HttpCode } from '@nestjs/common';
-import { EmailConfirmationUseCase } from '../application/useCases/emailConfirmation.use-case';
+import { EmailConfirmationUseCase } from '../application/useCases/emailConformation/emailConfirmation.use-case';
 import { FeedbackUseCase } from '../application/useCases/feedback.use-case';
-import { PasswordRecoveryUseCase } from '../application/useCases/passwordRecovery.use-case';
+import { PasswordConformationUseCase } from '../application/useCases/passwordRecovery/passwordConformation.use-case';
+import { SendEmailPasswordRecoveryLinkUseCase } from '../application/useCases/passwordRecovery/sendEmailPasswordRecovery.use-case';
 import { FeedbackInputModel } from './models/feedback.input-model';
+import { PasswordRecovery } from './models/passwordRecovery.input-model';
 
 @Controller('email')
 export class EmailController {
 	constructor(
 		private readonly feedbackUseCase: FeedbackUseCase,
 		private readonly emailConfirmationUseCase: EmailConfirmationUseCase,
-		private readonly passwordRecoveryUseCase: PasswordRecoveryUseCase,
+		private readonly passwordConformationUseCase: PasswordConformationUseCase,
+		private readonly sendEmailPasswordRecoveryLinkUseCase: SendEmailPasswordRecoveryLinkUseCase,
 	) {}
 
 	@HttpCode(200)
@@ -25,8 +28,14 @@ export class EmailController {
 	}
 
 	@HttpCode(200)
-	@Post('passwordRecovery/:confirmationCode')
+	@Post('passwordRecovery')
+	async sendEmailPasswordRecovery(@Body() userData: PasswordRecovery): Promise<void> {
+		await this.sendEmailPasswordRecoveryLinkUseCase.execute(userData);
+	}
+
+	@HttpCode(200)
+	@Post('confirmation/password/:confirmationCode')
 	async passwordRecovery(@Param('confirmationCode') confirmationCode: string): Promise<void> {
-		await this.passwordRecoveryUseCase.execute(confirmationCode);
+		await this.passwordConformationUseCase.execute(confirmationCode);
 	}
 }

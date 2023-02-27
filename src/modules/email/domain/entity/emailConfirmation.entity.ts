@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IConfirmation } from '../interfaces/confirmations.interface';
 import { UsersEntity } from '../../../users/domain/entity/users.entity';
+import { IConfirmation } from '../interfaces/confirmations.interface';
 
 @Entity('emailConfirmation')
 export class EmailConfirmationEntity extends BaseEntity implements IConfirmation {

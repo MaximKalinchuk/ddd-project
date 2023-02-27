@@ -5,7 +5,7 @@ import { UsersRepository } from '../../../users/infrastructure/users.repository'
 import { TokensViewModel } from '../dto/tokens.view-model';
 import { AuthService } from '../auth.service';
 import { ConfirmationRepository } from '../../../email/infrastructure/confirmations.repository';
-import { SendEmailConfirmationLinkUseCase } from '../../../email/application/useCases/sendConfirmationLink.use-case';
+import { SendEmailConfirmationLinkUseCase } from 'src/modules/email/application/useCases/emailConformation/sendEmailConfirmationLink.use-case';
 
 @Injectable()
 export class RegistrationUseCase {
