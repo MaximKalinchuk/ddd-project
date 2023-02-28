@@ -1,6 +1,5 @@
 import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
 import { PasswordRecovery } from 'src/modules/email/api/models/passwordRecovery.input-model';
-import { PasswordRepository } from 'src/modules/email/infrastructure/password.repository';
 import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
 const nodemailer = require('nodemailer');
 import { v4 as uuidv4 } from 'uuid';
@@ -8,10 +7,7 @@ const bcrypt = require('bcrypt');
 
 @Injectable()
 export class SendEmailPasswordRecoveryLinkUseCase {
-	constructor(
-		private readonly usersRepository: UsersRepository,
-		private readonly passwordRepository: PasswordRepository,
-	) {}
+	constructor(private readonly usersRepository: UsersRepository) {}
 
 	async execute(userData: PasswordRecovery): Promise<void> {
 		const user = await this.usersRepository.findOne({

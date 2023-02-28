@@ -1,23 +1,21 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { ConfirmationRepository } from '../../../infrastructure/confirmations.repository';
+import { UsersRepository } from '../../../../users/infrastructure/users.repository';
 
 @Injectable()
 export class EmailConfirmationUseCase {
-	constructor(private readonly confirmationRepository: ConfirmationRepository) {}
+	constructor(private readonly usersRepository: UsersRepository) {}
 
 	async execute(confirmationCode: string): Promise<void> {
-		const confirmation = await this.confirmationRepository.findOne({
-			where: {
-				confirmationCode,
-			},
-		});
+		const allUsers = await this.usersRepository.findMany({ relations: ['emailConfirmation'] });
 
-		if (!confirmation) {
+		const user = allUsers.filter((user) => user.emailConfirmation.confirmationCode === confirmationCode)[0];
+
+		if (!user) {
 			throw new HttpException('The link has expired.', HttpStatus.BAD_REQUEST);
 		}
 
-		confirmation.confirmationCode = '';
-		confirmation.isConfirmed = true;
-		await this.confirmationRepository.save(confirmation);
+		user.emailConfirmation.confirmationCode = '';
+		user.emailConfirmation.isConfirmed = true;
+		await this.usersRepository.save(user);
 	}
 }

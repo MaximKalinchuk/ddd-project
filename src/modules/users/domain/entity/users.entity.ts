@@ -48,6 +48,11 @@ export class UsersEntity extends MyBaseEntity implements IUser {
 			this.passwordRecovery = new PasswordRecoveryEntity(this.id);
 		}
 	}
+
+	getEmailConfirmationCode() {
+		return this.emailConfirmation.confirmationCode;
+	}
+
 	getPasswordHash(): string {
 		return this.passwordHash;
 	}
