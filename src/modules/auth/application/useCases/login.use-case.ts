@@ -27,7 +27,7 @@ export class LoginUseCase {
 		if (!userByEmail.emailConfirmation.isConfirmed) {
 			throw new HttpException(
 				'Please confirm your account. The message was sent to the mail during registration.',
-				HttpStatus.BAD_REQUEST,
+				HttpStatus.UNAUTHORIZED,
 			);
 		}
 

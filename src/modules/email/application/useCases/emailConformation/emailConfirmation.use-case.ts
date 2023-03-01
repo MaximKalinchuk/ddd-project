@@ -7,7 +7,7 @@ export class EmailConfirmationUseCase {
 
 	async execute(confirmationCode: string): Promise<void> {
 		const allUsers = await this.usersRepository.findMany({ relations: ['emailConfirmation'] });
-
+		console.log(allUsers);
 		const user = allUsers.filter((user) => user.emailConfirmation.confirmationCode === confirmationCode)[0];
 
 		if (!user) {

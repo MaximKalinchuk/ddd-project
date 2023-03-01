@@ -24,6 +24,7 @@ export class EmailController {
 	@HttpCode(200)
 	@Get('emailConfirmation/:confirmationCode')
 	async emailConfirmation(@Param('confirmationCode') confirmationCode: string): Promise<void> {
+		console.log(confirmationCode);
 		await this.emailConfirmationUseCase.execute(confirmationCode);
 	}
 

@@ -12,11 +12,18 @@ export class SendEmailPasswordRecoveryLinkUseCase {
 	async execute(userData: PasswordRecovery): Promise<void> {
 		const user = await this.usersRepository.findOne({
 			where: { email: userData.email },
-			relations: ['passwordRecovery'],
+			relations: ['passwordRecovery', 'emailConfirmation'],
 		});
 
 		if (!user) {
 			throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
+		}
+
+		if (!user.emailConfirmation.isConfirmed) {
+			throw new HttpException(
+				'Please confirm your account. The message was sent to the mail during registration.',
+				HttpStatus.BAD_REQUEST,
+			);
 		}
 
 		try {
