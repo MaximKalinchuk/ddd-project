@@ -2,6 +2,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { UsersEntity } from '../../modules/users/domain/entity/users.entity';
 import { Seed1639029201277 } from '../seeds/1639029201277-Seed';
+import { Seed1639029201278 } from '../seeds/1639029201278-Seed';
 
 dotenv.config({
 	path: `.${process.env.NODE_ENV}.env`,

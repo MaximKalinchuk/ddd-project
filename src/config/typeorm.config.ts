@@ -4,8 +4,8 @@ import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailCo
 import { UsersEntity } from '../modules/users/domain/entity/users.entity';
 import { PasswordRecoveryEntity } from '../modules/email/domain/entity/passwordRecovery.entity';
 import { join } from 'path';
+import { PostsEntity } from 'src/modules/posts/domain/entity/posts.entity';
 
-// console.log(join(__dirname, '..', '/database/migrations/*{.ts,.js}'));
 export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
 	useFactory: (configService: ConfigService) => ({
 		type: 'postgres',
@@ -14,9 +14,9 @@ export const TypeOrmConfigService = (): TypeOrmModuleAsyncOptions => ({
 		username: configService.get('PG_USERNAME'),
 		password: configService.get('PG_PASSWORD'),
 		database: configService.get('PG_DATABASE'),
-		entities: [UsersEntity, EmailConfirmationEntity, PasswordRecoveryEntity],
+		entities: [UsersEntity, EmailConfirmationEntity, PostsEntity, PasswordRecoveryEntity],
 		synchronize: false,
-		// migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+		migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
 		// cli: {
 		//     migrationsDir: 'src/migrations'
 		// }

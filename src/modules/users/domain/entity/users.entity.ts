@@ -1,5 +1,5 @@
 import { UserRole } from '../../../../constants/UserRole';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { MyBaseEntity } from '../../../base/base.entity.abstract';
 import { IUser } from '../interfaces/user.interface';
 import { UserInputModel } from './models/user.input-model';
@@ -7,6 +7,7 @@ import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailCo
 import { EmailConfirmationInputModel } from 'src/modules/email/domain/entity/models/confirmations.input-model';
 import { v4 as uuidv4 } from 'uuid';
 import { PasswordRecoveryEntity } from 'src/modules/email/domain/entity/passwordRecovery.entity';
+import { PostsEntity } from '../../../posts/domain/entity/posts.entity';
 
 @Entity({ name: 'users' })
 export class UsersEntity extends MyBaseEntity implements IUser {
@@ -34,6 +35,11 @@ export class UsersEntity extends MyBaseEntity implements IUser {
 		cascade: true,
 	})
 	passwordRecovery: PasswordRecoveryEntity;
+
+	@OneToMany(() => PostsEntity, (posts) => posts.users, {
+		cascade: true,
+	})
+	posts: PostsEntity;
 
 	constructor(userParams?: UserInputModel, emailParams?: EmailConfirmationInputModel) {
 		super();
