@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common/decorators/modules/module.decorator';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostsController } from './api/posts.controller';
-import { GetAllUserPostsUseCase } from './api/queryRepository/getAllUserPosts.queryRepository';
+import { GetPostsByUserIdUseCase } from './api/queryRepository/getPostsByUserId.queryRepository';
 import { PostsEntity } from './domain/entity/posts.entity';
 import { PostsRepository } from './infrastructure/posts.repository';
 import { UsersModule } from '../users/users.module';
+import { GetPostsByParamsUseCase } from './api/queryRepository/getPostsByParams.queryRepository';
+import { GetAllPostsUseCase } from './api/queryRepository/getAllPosts.queryRepository';
 
-const useCases = [GetAllUserPostsUseCase];
+const useCases = [GetPostsByUserIdUseCase, GetPostsByParamsUseCase, GetAllPostsUseCase];
 
 const adapters = [PostsRepository];
 

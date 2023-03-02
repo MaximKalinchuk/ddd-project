@@ -9,7 +9,7 @@ export class PostsEntity extends MyBaseEntity implements IPost {
 	img: string;
 
 	@Column()
-	title: string;
+	title: number;
 
 	@Column()
 	description: string;

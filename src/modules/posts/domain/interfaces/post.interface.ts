@@ -1,5 +1,5 @@
 export interface IPost {
 	img: string;
-	title: string;
+	title: number;
 	description: string;
 }
