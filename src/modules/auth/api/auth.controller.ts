@@ -6,7 +6,9 @@ import { LoginInputModel } from './models/login.input-model';
 import { LoginUseCase } from '../application/useCases/login.use-case';
 import { Request, Response } from 'express';
 import { RefreshUseCase } from '../application/useCases/refresh.use-case';
+import { AtPublic } from 'src/common/decorators/accessPublic.decorator';
 
+@AtPublic()
 @Controller('auth')
 export class AuthController {
 	constructor(

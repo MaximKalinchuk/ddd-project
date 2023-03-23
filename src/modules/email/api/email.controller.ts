@@ -1,4 +1,5 @@
 import { Body, Controller, Param, Post, HttpCode, Get } from '@nestjs/common';
+import { AtPublic } from 'src/common/decorators/accessPublic.decorator';
 import { EmailConfirmationUseCase } from '../application/useCases/emailConformation/emailConfirmation.use-case';
 import { FeedbackUseCase } from '../application/useCases/feedback.use-case';
 import { PasswordConformationUseCase } from '../application/useCases/passwordRecovery/passwordConformation.use-case';
@@ -21,6 +22,7 @@ export class EmailController {
 		await this.feedbackUseCase.expect(sendData);
 	}
 
+	@AtPublic()
 	@HttpCode(200)
 	@Get('emailConfirmation/:confirmationCode')
 	async emailConfirmation(@Param('confirmationCode') confirmationCode: string): Promise<void> {
@@ -28,12 +30,14 @@ export class EmailController {
 		await this.emailConfirmationUseCase.execute(confirmationCode);
 	}
 
+	@AtPublic()
 	@HttpCode(200)
 	@Post('passwordRecovery')
 	async sendEmailPasswordRecovery(@Body() userData: PasswordRecovery): Promise<void> {
 		await this.sendEmailPasswordRecoveryLinkUseCase.execute(userData);
 	}
 
+	@AtPublic()
 	@HttpCode(200)
 	@Get('confirmation/password/:confirmationCode')
 	async passwordRecovery(@Param('confirmationCode') confirmationCode: string): Promise<void> {
