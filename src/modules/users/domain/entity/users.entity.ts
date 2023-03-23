@@ -5,7 +5,6 @@ import { IUser } from '../interfaces/user.interface';
 import { UserInputModel } from './models/user.input-model';
 import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailConfirmation.entity';
 import { EmailConfirmationInputModel } from 'src/modules/email/domain/entity/models/confirmations.input-model';
-import { v4 as uuidv4 } from 'uuid';
 import { PasswordRecoveryEntity } from 'src/modules/email/domain/entity/passwordRecovery.entity';
 import { PostsEntity } from '../../../posts/domain/entity/posts.entity';
 

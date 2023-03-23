@@ -7,9 +7,7 @@ export class EmailConfirmationUseCase {
 
 	async execute(confirmationCode: string): Promise<void> {
 		const allUsers = await this.usersRepository.findMany({ relations: ['emailConfirmation'] });
-		console.log(allUsers);
 		const user = allUsers.filter((user) => user.emailConfirmation.confirmationCode === confirmationCode)[0];
-
 		if (!user) {
 			throw new HttpException('The link has expired.', HttpStatus.BAD_REQUEST);
 		}
