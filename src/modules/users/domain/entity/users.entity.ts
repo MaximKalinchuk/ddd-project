@@ -7,6 +7,7 @@ import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailCo
 import { EmailConfirmationInputModel } from 'src/modules/email/domain/entity/models/confirmations.input-model';
 import { PasswordRecoveryEntity } from 'src/modules/email/domain/entity/passwordRecovery.entity';
 import { PostsEntity } from '../../../posts/domain/entity/posts.entity';
+import { AntiSpamFeedbackTime } from '../../../email/domain/entity/antiSpamFeedbackTime.entity';
 
 @Entity({ name: 'users' })
 export class UsersEntity extends MyBaseEntity implements IUser {
@@ -40,6 +41,11 @@ export class UsersEntity extends MyBaseEntity implements IUser {
 	})
 	posts: PostsEntity;
 
+	@OneToOne(() => AntiSpamFeedbackTime, (feedbackTime) => feedbackTime.user, {
+		cascade: true,
+	})
+	feedbackTime: AntiSpamFeedbackTime;
+
 	constructor(userParams?: UserInputModel, emailParams?: EmailConfirmationInputModel) {
 		super();
 
@@ -51,6 +57,7 @@ export class UsersEntity extends MyBaseEntity implements IUser {
 			this.refresh_token = userParams.refresh_token ?? null;
 			this.emailConfirmation = new EmailConfirmationEntity(this.id, emailParams.confirmationCode);
 			this.passwordRecovery = new PasswordRecoveryEntity(this.id);
+			this.feedbackTime = new AntiSpamFeedbackTime(this.id);
 		}
 	}
 
