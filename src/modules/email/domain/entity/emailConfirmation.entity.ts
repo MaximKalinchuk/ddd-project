@@ -31,7 +31,7 @@ export class EmailConfirmationEntity extends BaseEntity implements IConfirmation
 
 		if (confirmationCode) {
 			this.confirmationCode = confirmationCode;
-			this.isConfirmed = false;
+			this.isConfirmed = true;
 		}
 	}
 }

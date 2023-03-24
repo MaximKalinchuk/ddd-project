@@ -1,5 +1,5 @@
 export class RefreshTokenViewModel {
-	readonly id: number;
+	readonly id: string;
 
 	readonly username: string;
 

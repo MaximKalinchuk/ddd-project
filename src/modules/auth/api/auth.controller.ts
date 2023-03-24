@@ -7,6 +7,7 @@ import { LoginUseCase } from '../application/useCases/login.use-case';
 import { Request, Response } from 'express';
 import { RefreshUseCase } from '../application/useCases/refresh.use-case';
 import { AtPublic } from 'src/common/decorators/accessPublic.decorator';
+import { LogoutUseCase } from '../application/useCases/logout.use-case';
 
 @AtPublic()
 @Controller('auth')
@@ -15,6 +16,7 @@ export class AuthController {
 		private readonly registrationUseCase: RegistrationUseCase,
 		private readonly loginUseCase: LoginUseCase,
 		private readonly refreshUseCase: RefreshUseCase,
+		private readonly logoutUseCase: LogoutUseCase,
 	) {}
 
 	@HttpCode(201)
@@ -60,5 +62,14 @@ export class AuthController {
 		return {
 			access_token: tokens.access_token,
 		};
+	}
+
+	@HttpCode(200)
+	@Post('logout')
+	async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<string> {
+		const refresh_token = req.cookies.refresh_token;
+		await this.logoutUseCase.execute(refresh_token);
+		res.clearCookie('refresh_token');
+		return 'Вы успешно вышли из системы.';
 	}
 }

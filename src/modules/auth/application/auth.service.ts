@@ -50,7 +50,7 @@ export class AuthService {
 			const decodeUser = this.jwtService.verify(token, {
 				secret: this.configService.get<string>('PRIVATE_REFRESH_KEY'),
 			});
-			return decodeUser;
+			return decodeUser.payload;
 		} catch (e) {
 			throw new UnauthorizedException();
 		}

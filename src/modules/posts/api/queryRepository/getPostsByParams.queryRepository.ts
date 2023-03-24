@@ -12,7 +12,7 @@ export class GetPostsByParamsUseCase {
 
 		// return await PostsEntity.find({ order: { title: 'DESC' }, skip: skipSize, where: { users: { id } } });
 		return await this.postsRepository.findMany({
-			where: { users: { id } },
+			where: { user: { id } },
 			order: { title: 'ASC' },
 			skip: skipSize,
 			take: PageSize,

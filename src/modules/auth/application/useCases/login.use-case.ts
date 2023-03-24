@@ -30,7 +30,8 @@ export class LoginUseCase {
 				HttpStatus.UNAUTHORIZED,
 			);
 		}
-
-		return await this.authService.generateTokens(userByEmail);
+		const tokens = await this.authService.generateTokens(userByEmail);
+		await this.authService.updateRefreshInDataBase(tokens.refresh_token, userByEmail);
+		return tokens;
 	}
 }

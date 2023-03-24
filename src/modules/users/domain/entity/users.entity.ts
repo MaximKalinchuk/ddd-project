@@ -36,7 +36,7 @@ export class UsersEntity extends MyBaseEntity implements IUser {
 	})
 	passwordRecovery: PasswordRecoveryEntity;
 
-	@OneToMany(() => PostsEntity, (posts) => posts.users, {
+	@OneToMany(() => PostsEntity, (posts) => posts.user, {
 		cascade: true,
 	})
 	posts: PostsEntity;
