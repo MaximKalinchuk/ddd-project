@@ -11,6 +11,7 @@ import { PasswordConformationUseCase } from './application/useCases/passwordReco
 import { SendEmailConfirmationLinkUseCase } from './application/useCases/emailConformation/sendEmailConfirmationLink.use-case';
 import { SendEmailPasswordRecoveryLinkUseCase } from './application/useCases/passwordRecovery/sendEmailPasswordRecovery.use-case';
 import { AntiSpamFeedbackTime } from './domain/entity/antiSpamFeedbackTime.entity';
+import { CqrsModule } from '@nestjs/cqrs';
 
 const useCases = [
 	FeedbackUseCase,
@@ -25,6 +26,7 @@ const adapters = [];
 	imports: [
 		TypeOrmModule.forFeature([EmailConfirmationEntity, PasswordRecoveryEntity, AntiSpamFeedbackTime]),
 		UsersModule,
+		CqrsModule,
 	],
 	controllers: [EmailController],
 	providers: [EmailService, ...useCases, ...adapters],

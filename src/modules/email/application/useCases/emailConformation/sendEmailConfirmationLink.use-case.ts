@@ -1,12 +1,28 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, BadRequestException } from '@nestjs/common';
 import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
+import { UsersQueryRepository } from '../../../../users/infrastructure/users.query.repository';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EXCEPTION_EMAIL_MESSAGES } from 'src/constants/exception.messages.enum';
 const nodemailer = require('nodemailer');
 
-@Injectable()
-export class SendEmailConfirmationLinkUseCase {
-	constructor(private readonly usersRepository: UsersRepository) {}
+export class SendEmailConfirmationLinkCommand {
+	public confirmationCode: string;
+	public email: string;
+	constructor(email: string, confirmationCode: string) {
+		this.confirmationCode = confirmationCode;
+		this.email = email;
+	}
+}
 
-	async execute(email: string, confirmationCode: string): Promise<void> {
+@CommandHandler(SendEmailConfirmationLinkCommand)
+export class SendEmailConfirmationLinkUseCase implements ICommandHandler<SendEmailConfirmationLinkCommand> {
+	constructor(
+		private readonly usersRepository: UsersRepository,
+		private readonly usersQueryRepository: UsersQueryRepository,
+	) {}
+
+	async execute(command: SendEmailConfirmationLinkCommand): Promise<void> {
+		const { email, confirmationCode } = command;
 		try {
 			let transporter = nodemailer.createTransport({
 				service: 'gmail',
@@ -25,10 +41,10 @@ export class SendEmailConfirmationLinkUseCase {
 			`,
 			});
 		} catch (e) {
-			const user = await this.usersRepository.findOne({ where: { email } });
-			await this.usersRepository.remove(user);
+			const user = await this.usersQueryRepository.getUserByEmail(email);
+			await this.usersRepository.softDelete(user.id);
 
-			throw new HttpException('Failed to send email confirmation message.', HttpStatus.BAD_REQUEST);
+			throw new BadRequestException(EXCEPTION_EMAIL_MESSAGES.EMAIL_SEND_ERROR_400);
 		}
 	}
 }

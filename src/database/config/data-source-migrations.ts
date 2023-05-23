@@ -5,7 +5,7 @@ import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailCo
 import { PasswordRecoveryEntity } from 'src/modules/email/domain/entity/passwordRecovery.entity';
 import { PostsEntity } from 'src/modules/posts/domain/entity/posts.entity';
 import { AntiSpamFeedbackTime } from 'src/modules/email/domain/entity/antiSpamFeedbackTime.entity';
-import { createDataBase1684831920189 } from '../migrations/1684831920189-createDataBase';
+import { createDataBase1684844151577 } from '../migrations/1684844151577-createDataBase';
 
 dotenv.config({
 	path: `.${process.env.NODE_ENV}.env`,
@@ -19,7 +19,7 @@ const config: DataSourceOptions = {
 	password: process.env.PG_PASSWORD,
 	database: process.env.PG_DATABASE,
 	entities: [UsersEntity, EmailConfirmationEntity, PasswordRecoveryEntity, PostsEntity, AntiSpamFeedbackTime],
-	migrations: [createDataBase1684831920189],
+	migrations: [createDataBase1684844151577],
 	synchronize: false,
 };
 

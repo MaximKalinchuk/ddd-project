@@ -1,15 +1,29 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, BadRequestException } from '@nestjs/common';
 import { UsersRepository } from '../../../../users/infrastructure/users.repository';
+import { UsersQueryRepository } from '../../../../users/infrastructure/users.query.repository';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EXCEPTION_EMAIL_MESSAGES } from '../../../../../constants/exception.messages.enum';
 
-@Injectable()
-export class EmailConfirmationUseCase {
-	constructor(private readonly usersRepository: UsersRepository) {}
+export class EmailConfirmationCommand {
+	public confirmationCode: string;
+	constructor(confirmationCode: string) {
+		this.confirmationCode = confirmationCode;
+	}
+}
 
-	async execute(confirmationCode: string): Promise<void> {
-		const allUsers = await this.usersRepository.findMany({ relations: ['emailConfirmation'] });
+@CommandHandler(EmailConfirmationCommand)
+export class EmailConfirmationUseCase implements ICommandHandler<EmailConfirmationCommand> {
+	constructor(
+		private readonly usersRepository: UsersRepository,
+		private readonly usersQueryRepository: UsersQueryRepository,
+	) {}
+
+	async execute(command: EmailConfirmationCommand): Promise<void> {
+		const { confirmationCode } = command;
+		const allUsers = await this.usersQueryRepository.getAllUsersWithAllRelations();
 		const user = allUsers.filter((user) => user.emailConfirmation.confirmationCode === confirmationCode)[0];
 		if (!user) {
-			throw new HttpException('The link has expired.', HttpStatus.BAD_REQUEST);
+			throw new BadRequestException(EXCEPTION_EMAIL_MESSAGES.EMAIL_LINK_TIME_400);
 		}
 
 		user.emailConfirmation.confirmationCode = '';

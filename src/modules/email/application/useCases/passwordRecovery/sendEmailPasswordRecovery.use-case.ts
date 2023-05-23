@@ -3,17 +3,19 @@ import { PasswordRecovery } from 'src/modules/email/api/models/passwordRecovery.
 import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
 const nodemailer = require('nodemailer');
 import { v4 as uuidv4 } from 'uuid';
+import { UsersQueryRepository } from '../../../../users/infrastructure/users.query.repository';
 const bcrypt = require('bcrypt');
 
+// ???
 @Injectable()
 export class SendEmailPasswordRecoveryLinkUseCase {
-	constructor(private readonly usersRepository: UsersRepository) {}
+	constructor(
+		private readonly usersRepository: UsersRepository,
+		private readonly usersQueryRepository: UsersQueryRepository,
+	) {}
 
 	async execute(userData: PasswordRecovery): Promise<void> {
-		const user = await this.usersRepository.findOne({
-			where: { email: userData.email },
-			relations: ['passwordRecovery', 'emailConfirmation'],
-		});
+		const user = await this.usersQueryRepository.getUserByEmailWithAllRelations(userData.email);
 
 		if (!user) {
 			throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
@@ -51,10 +53,7 @@ export class SendEmailPasswordRecoveryLinkUseCase {
 
 			await this.usersRepository.save(user);
 		} catch (e) {
-			const user = await this.usersRepository.findOne({
-				where: { email: userData.email },
-				relations: ['passwordRecovery'],
-			});
+			const user = await this.usersQueryRepository.getUserByEmailWithAllRelations(userData.email);
 			user.passwordRecovery.confirmationCode = null;
 			user.passwordRecovery.newPassword = null;
 

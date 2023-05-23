@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class createDataBase1684831920189 implements MigrationInterface {
-    name = 'createDataBase1684831920189'
+export class createDataBase1684844151577 implements MigrationInterface {
+    name = 'createDataBase1684844151577'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE "emailConfirmation" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "userId" uuid NOT NULL, "confirmationCode" character varying NOT NULL, "isConfirmed" boolean NOT NULL, CONSTRAINT "REL_3cc4a4d04f9c5d58c51d5079fe" UNIQUE ("userId"), CONSTRAINT "PK_a46f72520561a423dca2534082b" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "emailConfirmation" ("id" uuid NOT NULL, "created_At" TIMESTAMP DEFAULT now(), "updated_At" TIMESTAMP DEFAULT now(), "deleted_At" TIMESTAMP, "userId" uuid NOT NULL, "confirmationCode" character varying NOT NULL, "isConfirmed" boolean NOT NULL, CONSTRAINT "REL_3cc4a4d04f9c5d58c51d5079fe" UNIQUE ("userId"), CONSTRAINT "PK_a46f72520561a423dca2534082b" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "passwordRecovery" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "userId" uuid NOT NULL, "confirmationCode" character varying, "newPassword" character varying, CONSTRAINT "REL_7af3b00fa458b30ce631fd5cb3" UNIQUE ("userId"), CONSTRAINT "PK_6146c685884316d08f35e6ddc02" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "posts" ("id" uuid NOT NULL, "created_At" TIMESTAMP DEFAULT now(), "updated_At" TIMESTAMP DEFAULT now(), "deleted_At" TIMESTAMP, "userId" uuid NOT NULL, "img" character varying, "title" character varying NOT NULL, "description" character varying NOT NULL, CONSTRAINT "PK_2829ac61eff60fcec60d7274b9e" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "antiSpamFeedbackTime" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "userId" uuid NOT NULL, "createdAt" TIMESTAMP, CONSTRAINT "REL_87c0a9d87bfc5e2ab5e517ea5f" UNIQUE ("userId"), CONSTRAINT "PK_287aff9489fa9fabd66481c8ee6" PRIMARY KEY ("id"))`);

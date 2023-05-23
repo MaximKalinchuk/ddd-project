@@ -1,18 +1,30 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersRepository } from '../../../../users/infrastructure/users.repository';
+import { UsersQueryRepository } from '../../../../users/infrastructure/users.query.repository';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EXCEPTION_EMAIL_MESSAGES } from 'src/constants/exception.messages.enum';
 
-@Injectable()
-export class PasswordConformationUseCase {
-	constructor(private readonly usersRepository: UsersRepository) {}
-	
-	async execute(confirmationCode: string): Promise<void> {
-		const allUsers = await this.usersRepository.findMany({
-			relations: ['passwordRecovery'],
-		});
+export class PasswordConformationCommand {
+	public confirmationCode: string;
+	constructor(confirmationCode: string) {
+		this.confirmationCode = confirmationCode;
+	}
+}
+
+@CommandHandler(PasswordConformationCommand)
+export class PasswordConformationUseCase implements ICommandHandler<PasswordConformationCommand> {
+	constructor(
+		private readonly usersRepository: UsersRepository,
+		private readonly usersQueryRepository: UsersQueryRepository,
+	) {}
+
+	async execute(command: PasswordConformationCommand): Promise<void> {
+		const { confirmationCode } = command;
+		const allUsers = await this.usersQueryRepository.getAllUsersWithAllRelations();
 
 		const user = allUsers.filter((user) => user.passwordRecovery.confirmationCode === confirmationCode)[0];
 		if (!user) {
-			throw new HttpException('The link has expired.', HttpStatus.BAD_REQUEST);
+			throw new BadRequestException(EXCEPTION_EMAIL_MESSAGES.EMAIL_LINK_TIME_400);
 		}
 
 		user.passwordHash = user.passwordRecovery.newPassword;

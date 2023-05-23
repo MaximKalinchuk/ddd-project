@@ -1,12 +1,11 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UsersEntity } from '../../../users/domain/entity/users.entity';
 import { IConfirmation } from '../interfaces/confirmations.interface';
+import { BaseEntity } from '../../../base/base.entity.abstract';
+import { randomUUID } from 'crypto';
 
 @Entity('emailConfirmation')
-export class EmailConfirmationEntity extends BaseEntity implements IConfirmation {
-	@PrimaryGeneratedColumn('uuid')
-	id: string;
-
+export class EmailConfirmationEntity extends BaseEntity {
 	@Column()
 	userId: string;
 
@@ -22,16 +21,12 @@ export class EmailConfirmationEntity extends BaseEntity implements IConfirmation
 	@JoinColumn()
 	user: UsersEntity;
 
-	constructor(userId?: string, confirmationCode?: string) {
-		super();
-
-		if (userId) {
-			this.userId = userId;
-		}
-
-		if (confirmationCode) {
-			this.confirmationCode = confirmationCode;
-			this.isConfirmed = true;
-		}
+	static create(userId: string) {
+		const newEmailConformation = new EmailConfirmationEntity();
+		newEmailConformation.id = randomUUID();
+		newEmailConformation.userId = userId;
+		newEmailConformation.confirmationCode = randomUUID();
+		newEmailConformation.isConfirmed = true;
+		return newEmailConformation;
 	}
 }

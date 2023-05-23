@@ -18,4 +18,27 @@ export class UsersQueryRepository {
 	async getUserByIdWithPosts(id): Promise<UsersEntity> {
 		return await this.usersRepository.findOne({ where: { id: String(id) }, relations: { posts: true } });
 	}
+
+	async getUserById(id): Promise<UsersEntity> {
+		return await this.usersRepository.findOne({ where: { id: String(id) } });
+	}
+
+	async getUserByEmailWithAllRelations(email: string) {
+		return await this.usersRepository.findOne({
+			where: { email },
+			relations: { passwordRecovery: true, emailConfirmation: true, feedbackTime: true },
+		});
+	}
+
+	async getAllUsersWithAllRelations() {
+		return await this.usersRepository.find({
+			relations: { passwordRecovery: true, emailConfirmation: true, feedbackTime: true },
+		});
+	}
+	async getUserByEmailWithEmailConfirmation(email: string): Promise<UsersEntity> {
+		return await this.usersRepository.findOne({
+			where: { email },
+			relations: { emailConfirmation: true },
+		});
+	}
 }

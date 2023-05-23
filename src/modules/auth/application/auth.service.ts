@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersEntity } from 'src/modules/users/domain/entity/users.entity';
 import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
-import { RefreshTokenViewModel } from './dto/refreshDecode.view-model';
-import { TokensViewModel } from './dto/tokens.view-model';
+import { RefreshTokenViewModel } from './dto/view/refreshDecode.view-model';
+import { TokensViewModel } from './dto/view/tokens.view-model';
 const bcrypt = require('bcrypt');
 
 @Injectable()

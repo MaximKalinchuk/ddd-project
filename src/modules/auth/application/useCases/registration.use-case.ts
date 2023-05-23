@@ -1,12 +1,13 @@
 import { CreateUserInputModel } from 'src/modules/users/api/models/createUser.input-modal';
 import { CreateUsersCommand, CreateUsersUseCase } from '../../../users/application/useCases/create.user.use-case';
 import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UsersRepository } from '../../../users/infrastructure/users.repository';
-import { TokensViewModel } from '../dto/tokens.view-model';
 import { AuthService } from '../auth.service';
 import { SendEmailConfirmationLinkUseCase } from 'src/modules/email/application/useCases/emailConformation/sendEmailConfirmationLink.use-case';
 import { UsersQueryRepository } from '../../../../modules/users/infrastructure/users.query.repository';
 import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs';
+import { EXCEPTION_USER_MESSAGES } from '../../../../constants/exception.messages.enum';
+import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailConfirmation.entity';
+import { TokensViewModel } from '../dto/view/tokens.view-model';
 
 export class RegistrationCommand {
 	public username: string;
@@ -34,13 +35,12 @@ export class RegistrationUseCase implements ICommandHandler<RegistrationCommand>
 		const userByUsername = await this.usersQueryRepository.getUserByUsername(username);
 
 		if (userByEmail) {
-			throw new BadRequestException('Пользователь с такой почтой уже существует');
+			throw new BadRequestException(EXCEPTION_USER_MESSAGES.USER_EMAIL_400);
 		}
 
 		if (userByUsername) {
-			throw new BadRequestException('Пользователь с таким ником уже существует');
+			throw new BadRequestException(EXCEPTION_USER_MESSAGES.USER_USERNAME_400);
 		}
-		console.log(command);
 		const newUser = await this.commandBus.execute(new CreateUsersCommand(command));
 
 		// await this.sendEmailConfirmationLinkUseCase.execute(newUser.email, newUser.emailConfirmation.confirmationCode);
