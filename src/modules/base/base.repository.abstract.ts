@@ -1,25 +1,20 @@
-import { BaseEntity, FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { IBaseRepository } from './interface/base.repository.interface';
-export abstract class BaseRepository<T extends BaseEntity> implements IBaseRepository<T> {
+
+export abstract class BaseRepository<T> implements IBaseRepository<T> {
 	constructor(private readonly baseRepository: Repository<T>) {}
 
 	async save(model: T): Promise<T> {
-		return await model.save();
+		return await this.baseRepository.save(model);
 	}
-	async remove(model: T): Promise<boolean> {
-		await model.remove();
+
+	async softDelete(id: string): Promise<boolean> {
+		await this.baseRepository.softDelete(id);
 		return true;
 	}
-	async softRemove(model: T): Promise<boolean> {
-		await model.softRemove();
+
+	async delete(id: string): Promise<boolean> {
+		await this.baseRepository.delete(id);
 		return true;
-	}
-	async findOne(options: FindOneOptions<T>): Promise<T> {
-		const findOneModel = await this.baseRepository.findOne(options);
-		return findOneModel;
-	}
-	async findMany(options: FindManyOptions<T>): Promise<T[]> {
-		const findManyModel = await this.baseRepository.find(options);
-		return findManyModel;
 	}
 }

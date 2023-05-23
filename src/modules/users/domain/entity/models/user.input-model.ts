@@ -1,13 +1,11 @@
-import { UserRole } from '../../../../../constants/UserRole';
+import { USER_ROLES } from '../../../../../constants/user.role.enum';
 
 export class UserInputModel {
 	email: string;
 
-	passwordHash: string;
+	password: string;
 
 	username: string;
 
-	role: UserRole;
-
-	refresh_token: string | null;
+	role: USER_ROLES;
 }

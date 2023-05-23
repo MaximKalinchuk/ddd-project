@@ -1,4 +1,4 @@
-import { UserRole } from '../../../constants/UserRole';
+import { UserRole } from '../../../constants/user.role.enum';
 import { UserInputModel } from './entity/models/user.input-model';
 import { UsersEntity } from './entity/users.entity';
 

@@ -1,14 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { IBaseEntity } from './interface/base.entity.interface';
+import { CreateDateColumn, DeleteDateColumn, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { AggregateRoot } from '@nestjs/cqrs';
 
-@Entity()
-export abstract class MyBaseEntity extends BaseEntity implements IBaseEntity {
-	@PrimaryGeneratedColumn('uuid')
-	id: string;
-
-	@Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true })
-	createdAt: Date;
-
-	@Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true })
-	updatedAt: Date;
+export abstract class BaseEntity extends AggregateRoot {
+	@PrimaryColumn('uuid')
+	public id: string;
+	@CreateDateColumn({ nullable: true })
+	public created_At: Date;
+	@UpdateDateColumn({ nullable: true })
+	public updated_At: Date;
+	@DeleteDateColumn({ nullable: true })
+	public deleted_At: Date;
 }

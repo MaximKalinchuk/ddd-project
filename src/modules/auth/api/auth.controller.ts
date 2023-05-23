@@ -1,13 +1,14 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { CreateUserInputModel } from 'src/modules/users/api/models/createUser.input-modal';
 import { AccessToken } from '../application/dto/registration.view-model';
-import { RegistrationUseCase } from '../application/useCases/registration.use-case';
+import { RegistrationCommand, RegistrationUseCase } from '../application/useCases/registration.use-case';
 import { LoginInputModel } from './models/login.input-model';
 import { LoginUseCase } from '../application/useCases/login.use-case';
 import { Request, Response } from 'express';
 import { RefreshUseCase } from '../application/useCases/refresh.use-case';
 import { AtPublic } from 'src/common/decorators/accessPublic.decorator';
 import { LogoutUseCase } from '../application/useCases/logout.use-case';
+import { CommandBus } from '@nestjs/cqrs';
 
 @AtPublic()
 @Controller('auth')
@@ -17,6 +18,7 @@ export class AuthController {
 		private readonly loginUseCase: LoginUseCase,
 		private readonly refreshUseCase: RefreshUseCase,
 		private readonly logoutUseCase: LogoutUseCase,
+		private readonly commandBus: CommandBus,
 	) {}
 
 	@HttpCode(201)
@@ -25,7 +27,7 @@ export class AuthController {
 		@Body() userData: CreateUserInputModel,
 		@Res({ passthrough: true }) res: Response,
 	): Promise<AccessToken> {
-		const tokens = await this.registrationUseCase.execute(userData);
+		const tokens = await this.commandBus.execute(new RegistrationCommand(userData));
 		res.cookie('refresh_token', tokens.refresh_token, {
 			maxAge: 3600 * 1000 * 168,
 			httpOnly: true,

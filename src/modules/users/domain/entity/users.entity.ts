@@ -1,6 +1,6 @@
-import { UserRole } from '../../../../constants/UserRole';
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { MyBaseEntity } from '../../../base/base.entity.abstract';
+import { USER_ROLES } from '../../../../constants/user.role.enum';
+import { BeforeInsert, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity } from '../../../base/base.entity.abstract';
 import { IUser } from '../interfaces/user.interface';
 import { UserInputModel } from './models/user.input-model';
 import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailConfirmation.entity';
@@ -8,9 +8,11 @@ import { EmailConfirmationInputModel } from 'src/modules/email/domain/entity/mod
 import { PasswordRecoveryEntity } from 'src/modules/email/domain/entity/passwordRecovery.entity';
 import { PostsEntity } from '../../../posts/domain/entity/posts.entity';
 import { AntiSpamFeedbackTime } from '../../../email/domain/entity/antiSpamFeedbackTime.entity';
+import { hash } from 'bcrypt';
+import { randomUUID } from 'crypto';
 
 @Entity({ name: 'users' })
-export class UsersEntity extends MyBaseEntity implements IUser {
+export class UsersEntity extends BaseEntity implements IUser {
 	@Column()
 	email: string;
 
@@ -21,10 +23,15 @@ export class UsersEntity extends MyBaseEntity implements IUser {
 	username: string;
 
 	@Column()
-	role: UserRole;
+	role: USER_ROLES;
 
 	@Column({ default: null, nullable: true })
 	refresh_token: string | null;
+
+	@BeforeInsert()
+	async hashPassword(): Promise<void> {
+		this.passwordHash = await hash(this.passwordHash, 10);
+	}
 
 	@OneToOne(() => EmailConfirmationEntity, (emailConfirmation) => emailConfirmation.user, {
 		cascade: true,
@@ -46,55 +53,33 @@ export class UsersEntity extends MyBaseEntity implements IUser {
 	})
 	feedbackTime: AntiSpamFeedbackTime;
 
-	constructor(userParams?: UserInputModel, emailParams?: EmailConfirmationInputModel) {
-		super();
+	static create(userParams: UserInputModel) {
+		const newUser = new UsersEntity();
+		newUser.id = randomUUID();
+		newUser.email = userParams.email;
+		newUser.username = userParams.username;
+		newUser.role = userParams.role;
+		newUser.refresh_token = null;
+		newUser.passwordHash = userParams.password;
+		return newUser;
+		// newUser.emailConfirmation.confirmationCode = new EmailConfirmationEntity(this.id, emailParams.confirmationCode);
+	}
+	// constructor(userParams?: UserInputModel, emailParams?: EmailConfirmationInputModel) {
+	// 	super();
 
-		if (userParams && emailParams) {
-			this.username = userParams.username;
-			this.email = userParams.email ?? '';
-			this.passwordHash = userParams.passwordHash ?? '';
-			this.role = userParams.role ?? UserRole.USER;
-			this.refresh_token = userParams.refresh_token ?? null;
-			this.emailConfirmation = new EmailConfirmationEntity(this.id, emailParams.confirmationCode);
-			this.passwordRecovery = new PasswordRecoveryEntity(this.id);
-			this.feedbackTime = new AntiSpamFeedbackTime(this.id);
-		}
-	}
+	// 	if (userParams && emailParams) {
+	// 		this.username = userParams.username;
+	// 		this.email = userParams.email ?? '';
+	// 		this.passwordHash = userParams.passwordHash ?? '';
+	// 		this.role = userParams.role ?? UserRole.USER;
+	// 		this.refresh_token = userParams.refresh_token ?? null;
+	// 		this.emailConfirmation = new EmailConfirmationEntity(this.id, emailParams.confirmationCode);
+	// this.passwordRecovery = new PasswordRecoveryEntity(this.id);
+	// this.feedbackTime = new AntiSpamFeedbackTime(this.id);
+	// 	}
+	// }
 
-	getEmailConfirmationCode() {
-		return this.emailConfirmation.confirmationCode;
-	}
-
-	getPasswordHash(): string {
-		return this.passwordHash;
-	}
-	setPasswordHash(hash: string): void {
-		this.passwordHash = hash;
-	}
-	getRole(): string {
-		return this.role;
-	}
-	setRole(role: UserRole): void {
-		this.role = role;
-	}
-	getRefreshToken(): string {
-		return this.refresh_token;
-	}
-	setRefreshToken(token: string): void {
-		this.refresh_token = token;
-	}
-
-	getEmail(): string {
-		return this.email;
-	}
-	setEmail(email: string): void {
-		this.email = email;
-	}
-
-	getUsername(): string {
-		return this.username;
-	}
-	setUsername(username: string): void {
-		this.username = username;
+	setRefreshToken(tokenHash: string) {
+		this.refresh_token = tokenHash;
 	}
 }

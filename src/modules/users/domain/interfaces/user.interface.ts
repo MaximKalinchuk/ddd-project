@@ -1,4 +1,4 @@
-import { UserRole } from '../../../../constants/UserRole';
+import { USER_ROLES } from '../../../../constants/user.role.enum';
 
 export interface IUser {
 	email: string;
@@ -7,27 +7,7 @@ export interface IUser {
 
 	username: string;
 
-	role: UserRole;
+	role: USER_ROLES;
 
 	refresh_token: string | null;
-
-	getUsername(): string;
-
-	setUsername(name: string): void;
-
-	getEmail(): string;
-
-	setEmail(email: string): void;
-
-	getPasswordHash(): string;
-
-	setPasswordHash(hash: string): void;
-
-	getRole(): string;
-
-	setRole(role: string): void;
-
-	getRefreshToken(): string;
-
-	setRefreshToken(token: string): void;
 }

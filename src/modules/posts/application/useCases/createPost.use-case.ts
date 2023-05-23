@@ -1,4 +1,4 @@
-import { CreatePostInputModel } from '../../api/models/createPost.input-modul';
+import { CreatePostInputModel } from '../../api/models/input/createPost.input-modul';
 import { PostsEntity } from '../../domain/entity/posts.entity';
 import { Injectable } from '@nestjs/common';
 import { PostsRepository } from '../../infrastructure/posts.repository';

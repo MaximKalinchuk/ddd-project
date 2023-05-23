@@ -1,11 +1,11 @@
 import { Entity, Column, ManyToOne, JoinTable } from 'typeorm';
-import { MyBaseEntity } from '../../../base/base.entity.abstract';
+import { BaseEntity } from '../../../base/base.entity.abstract';
 import { IPost } from '../interfaces/post.interface';
 import { UsersEntity } from '../../../users/domain/entity/users.entity';
-import { CreatePostInputModel } from '../../api/models/createPost.input-modul';
+import { CreatePostInputModel } from '../../api/models/input/createPost.input-modul';
 
 @Entity('posts')
-export class PostsEntity extends MyBaseEntity implements IPost {
+export class PostsEntity extends BaseEntity implements IPost {
 	@Column()
 	userId: string;
 
