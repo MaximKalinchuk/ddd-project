@@ -12,3 +12,7 @@ export enum EXCEPTION_EMAIL_MESSAGES {
 	EMAIL_FEEDBACK_ERROR_400 = 'Не удалось отправить отзыв',
 	EMAIL_ANTISPAM_ERROR_400 = 'Подождите 5 минут и повторите попытку',
 }
+
+export enum EXCEPTION_POST_MESSAGES {
+	POST_NOT_FOUND_404 = 'Пост не найден',
+}

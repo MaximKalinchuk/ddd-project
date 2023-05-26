@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Logger, Post, Req, Res } from '@nestjs/common';
 import { CreateUserInputModel } from 'src/modules/users/api/models/createUser.input-modal';
 import { RegistrationCommand, RegistrationUseCase } from '../application/useCases/registration.use-case';
 import { LoginInputModel } from './models/login.input-model';
@@ -13,6 +13,7 @@ import { AccessToken } from '../application/dto/view/registration.view-model';
 @AtPublic()
 @Controller('auth')
 export class AuthController {
+	private readonly logger = new Logger(AuthController.name);
 	constructor(private readonly commandBus: CommandBus) {}
 
 	@HttpCode(201)
@@ -21,6 +22,7 @@ export class AuthController {
 		@Body() userData: CreateUserInputModel,
 		@Res({ passthrough: true }) res: Response,
 	): Promise<AccessToken> {
+		this.logger.log(`Пользователь ${userData.email} пытается зарегистрироваться`);
 		const tokens = await this.commandBus.execute(new RegistrationCommand(userData));
 		res.cookie('refresh_token', tokens.refresh_token, {
 			maxAge: 3600 * 1000 * 168,
@@ -34,6 +36,7 @@ export class AuthController {
 	@HttpCode(200)
 	@Post('login')
 	async login(@Body() userData: LoginInputModel, @Res({ passthrough: true }) res: Response): Promise<AccessToken> {
+		this.logger.log(`Пользователь ${userData.email} пытается войти в систему`);
 		const tokens = await this.commandBus.execute(new LoginCommand(userData));
 		res.cookie('refresh_token', tokens.refresh_token, {
 			maxAge: 3600 * 1000 * 168,

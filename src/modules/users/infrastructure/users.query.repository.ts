@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BaseRepository } from 'src/modules/base/base.repository.abstract';
 import { UsersEntity } from '../domain/entity/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { EXCEPTION_USER_MESSAGES } from '../../../constants/exception.messages.enum';
+import { PostsEntity } from 'src/modules/posts/domain/entity/posts.entity';
 @Injectable()
 export class UsersQueryRepository {
 	constructor(@InjectRepository(UsersEntity) private readonly usersRepository: Repository<UsersEntity>) {}
@@ -16,7 +18,19 @@ export class UsersQueryRepository {
 	}
 
 	async getUserByIdWithPosts(id): Promise<UsersEntity> {
-		return await this.usersRepository.findOne({ where: { id: String(id) }, relations: { posts: true } });
+		const user = await this.usersRepository.findOne({ where: { id: String(id) }, relations: { posts: true } });
+		if (!user) {
+			throw new NotFoundException(EXCEPTION_USER_MESSAGES.USER_NOT_FOUND_404);
+		}
+		return user;
+	}
+
+	async getPostsUserById(id): Promise<PostsEntity[]> {
+		const user = await this.usersRepository.findOne({ where: { id: String(id) }, relations: { posts: true } });
+		if (!user) {
+			throw new NotFoundException(EXCEPTION_USER_MESSAGES.USER_NOT_FOUND_404);
+		}
+		return user.posts;
 	}
 
 	async getUserById(id): Promise<UsersEntity> {
@@ -26,7 +40,7 @@ export class UsersQueryRepository {
 	async getUserByEmailWithAllRelations(email: string) {
 		return await this.usersRepository.findOne({
 			where: { email },
-			relations: { passwordRecovery: true, emailConfirmation: true, feedbackTime: true },
+			relations: { passwordRecovery: true, emailConfirmation: true, feedbackTime: true, posts: true },
 		});
 	}
 

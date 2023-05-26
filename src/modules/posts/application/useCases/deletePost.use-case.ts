@@ -1,20 +1,27 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PostsRepository } from '../../infrastructure/posts.repository';
 import { PostsQueryRepository } from '../../infrastructure/posts.query.repository';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EXCEPTION_POST_MESSAGES } from '../../../../constants/exception.messages.enum';
 
-@Injectable()
-export class DeletePostUseCase {
+export class DeletePostCommand {
+	constructor(public id: string) {}
+}
+
+@CommandHandler(DeletePostCommand)
+export class DeletePostUseCase implements ICommandHandler<DeletePostCommand> {
 	constructor(
 		private readonly postsQueryRepository: PostsQueryRepository,
 		private readonly postsRepository: PostsRepository,
 	) {}
 
-	async execute(id: string) {
+	async execute(command: DeletePostCommand) {
+		const { id } = command;
 		const post = await this.postsQueryRepository.getPostById(id);
 		if (!post) {
-			throw new HttpException('Post not found.', HttpStatus.NOT_FOUND);
+			throw new NotFoundException(EXCEPTION_POST_MESSAGES.POST_NOT_FOUND_404);
 		}
-		await this.postsRepository.delete(id);
-		return 'Post was deleted.';
+		await this.postsRepository.softDelete(id);
+		return 'Пост удалён';
 	}
 }

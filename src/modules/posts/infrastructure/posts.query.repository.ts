@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { BaseRepository } from 'src/modules/base/base.repository.abstract';
 import { Repository } from 'typeorm';
-import { GetPostsByParamsCommand } from '../api/queryRepository/getPostsByParams.queryRepository';
+import { GetPostsByParamsCommand } from '../application/useCases/pagination.use-case';
 
 @Injectable()
 export class PostsQueryRepository {

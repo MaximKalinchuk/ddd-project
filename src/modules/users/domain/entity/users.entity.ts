@@ -46,7 +46,7 @@ export class UsersEntity extends BaseEntity implements IUser {
 	@OneToMany(() => PostsEntity, (posts) => posts.user, {
 		cascade: true,
 	})
-	posts: PostsEntity;
+	posts: PostsEntity[];
 
 	@OneToOne(() => AntiSpamFeedbackTime, (feedbackTime) => feedbackTime.user, {
 		cascade: true,

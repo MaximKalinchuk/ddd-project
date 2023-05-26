@@ -1,6 +1,3 @@
-import { Injectable } from '@nestjs/common';
-import { PostsRepository } from '../../infrastructure/posts.repository';
-import { PostsEntity } from '../../domain/entity/posts.entity';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PostsQueryRepository } from '../../infrastructure/posts.query.repository';
 

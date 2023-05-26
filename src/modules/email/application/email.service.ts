@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserFromJwtTokenViewModel } from 'src/modules/users/application/dto/userFromJwtToken.view-model';
 import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
 import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
+import { EXCEPTION_EMAIL_MESSAGES } from 'src/constants/exception.messages.enum';
 
 @Injectable()
 export class EmailService {
@@ -23,7 +24,7 @@ export class EmailService {
 		} else {
 			const timeDifference = timeNow.getTime() - lastSendFeedbackTime.getTime();
 			if (timeDifference < 300000) {
-				throw new HttpException('Wait 5 minutes and try again.', HttpStatus.BAD_REQUEST);
+				throw new BadRequestException(EXCEPTION_EMAIL_MESSAGES.EMAIL_ANTISPAM_ERROR_400);
 			}
 			const newDate = new Date(timeNow);
 			userById.feedbackTime.createdAt = newDate;
