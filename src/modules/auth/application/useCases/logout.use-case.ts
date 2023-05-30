@@ -3,7 +3,7 @@ import { UsersRepository } from 'src/modules/users/infrastructure/users.reposito
 import { AuthService } from '../auth.service';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UsersQueryRepository } from 'src/modules/users/infrastructure/users.query.repository';
-import { EXCEPTION_USER_MESSAGES } from 'src/constants/exception.messages.enum';
+import { EXCEPTION_USER_MESSAGES } from '@lib/constants/exception.messages.enum';
 
 export class LogoutCommand {
 	public refresh_token: string;

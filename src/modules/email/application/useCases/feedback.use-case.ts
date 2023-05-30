@@ -4,7 +4,7 @@ import { UsersRepository } from '../../../users/infrastructure/users.repository'
 import { UserFromJwtTokenViewModel } from 'src/modules/users/application/dto/userFromJwtToken.view-model';
 import { EmailService } from '../email.service';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { EXCEPTION_EMAIL_MESSAGES } from 'src/constants/exception.messages.enum';
+import { EXCEPTION_EMAIL_MESSAGES } from '@lib/constants/exception.messages.enum';
 const nodemailer = require('nodemailer');
 
 export class FeedbackCommand {

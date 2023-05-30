@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, BadRequestException, NotFoundExc
 import { PostsRepository } from '../../infrastructure/posts.repository';
 import { PostsQueryRepository } from '../../infrastructure/posts.query.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { EXCEPTION_POST_MESSAGES } from '../../../../constants/exception.messages.enum';
+import { EXCEPTION_POST_MESSAGES } from '@lib/constants/exception.messages.enum';
 
 export class DeletePostCommand {
 	constructor(public id: string) {}

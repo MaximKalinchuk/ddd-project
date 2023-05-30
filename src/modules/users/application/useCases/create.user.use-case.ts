@@ -1,8 +1,7 @@
 import { CreateUserInputModel } from '../../api/models/createUser.input-modal';
 import { UsersRepository } from '../../infrastructure/users.repository';
-import { UsersEntity } from '../../domain/entity/users.entity';
+import { USER_ROLES, UsersEntity } from '../../domain/entity/users.entity';
 import { UserInputModel } from '../../domain/entity/models/user.input-model';
-import { USER_ROLES } from 'src/constants/user.role.enum';
 import { EmailConfirmationInputModel } from 'src/modules/email/domain/entity/models/confirmations.input-model';
 const bcrypt = require('bcrypt');
 import { v4 as uuidv4 } from 'uuid';

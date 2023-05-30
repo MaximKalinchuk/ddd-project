@@ -27,7 +27,6 @@ export class PostsController {
 	private readonly logger = new Logger(PostsController.name);
 	constructor(
 		private readonly postsQueryRepository: PostsQueryRepository,
-		private readonly updatePostUseCase: UpdatePostUseCase,
 		private readonly commandBus: CommandBus,
 		private readonly usersQueryRepository: UsersQueryRepository,
 	) {}
@@ -56,7 +55,6 @@ export class PostsController {
 	@Post()
 	async createPost(@Body() postData: CreatePostInputModel, @Req() req: Request): Promise<PostsEntity> {
 		const user = req.user;
-
 		if ('id' in user) {
 			if (typeof user.id === 'string') {
 				return await this.commandBus.execute(new CreatePostCommand(user.id, postData));

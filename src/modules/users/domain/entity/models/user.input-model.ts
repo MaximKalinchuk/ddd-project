@@ -1,4 +1,4 @@
-import { USER_ROLES } from '../../../../../constants/user.role.enum';
+import { USER_ROLES } from '../users.entity';
 
 export class UserInputModel {
 	email: string;

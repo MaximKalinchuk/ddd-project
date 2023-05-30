@@ -3,8 +3,8 @@ import { BaseRepository } from 'src/modules/base/base.repository.abstract';
 import { UsersEntity } from '../domain/entity/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { EXCEPTION_USER_MESSAGES } from '../../../constants/exception.messages.enum';
 import { PostsEntity } from 'src/modules/posts/domain/entity/posts.entity';
+import { EXCEPTION_USER_MESSAGES } from '@lib/constants/exception.messages.enum';
 @Injectable()
 export class UsersQueryRepository {
 	constructor(@InjectRepository(UsersEntity) private readonly usersRepository: Repository<UsersEntity>) {}

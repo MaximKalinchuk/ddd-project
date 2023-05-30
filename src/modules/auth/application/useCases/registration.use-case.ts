@@ -5,9 +5,9 @@ import { AuthService } from '../auth.service';
 import { SendEmailConfirmationLinkUseCase } from 'src/modules/email/application/useCases/emailConformation/sendEmailConfirmationLink.use-case';
 import { UsersQueryRepository } from '../../../../modules/users/infrastructure/users.query.repository';
 import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs';
-import { EXCEPTION_USER_MESSAGES } from '../../../../constants/exception.messages.enum';
 import { EmailConfirmationEntity } from 'src/modules/email/domain/entity/emailConfirmation.entity';
 import { TokensViewModel } from '../dto/view/tokens.view-model';
+import { EXCEPTION_USER_MESSAGES } from '@lib/constants/exception.messages.enum';
 
 export class RegistrationCommand {
 	public username: string;

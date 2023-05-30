@@ -4,7 +4,7 @@ import { PostsEntity } from '../../domain/entity/posts.entity';
 import { PostsQueryRepository } from '../../infrastructure/posts.query.repository';
 import { PostsRepository } from '../../infrastructure/posts.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { EXCEPTION_POST_MESSAGES } from 'src/constants/exception.messages.enum';
+import { EXCEPTION_POST_MESSAGES } from '@lib/constants/exception.messages.enum';
 
 export class UpdatePostCommand {
 	public id: string;

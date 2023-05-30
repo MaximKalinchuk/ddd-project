@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, BadRequestException } from '@nes
 import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
 import { UsersQueryRepository } from '../../../../users/infrastructure/users.query.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { EXCEPTION_EMAIL_MESSAGES } from 'src/constants/exception.messages.enum';
+import { EXCEPTION_EMAIL_MESSAGES } from '@lib/constants/exception.messages.enum';
 const nodemailer = require('nodemailer');
 
 export class SendEmailConfirmationLinkCommand {

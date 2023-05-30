@@ -2,7 +2,7 @@ import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nes
 import { UserFromJwtTokenViewModel } from 'src/modules/users/application/dto/userFromJwtToken.view-model';
 import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
 import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
-import { EXCEPTION_EMAIL_MESSAGES } from 'src/constants/exception.messages.enum';
+import { EXCEPTION_EMAIL_MESSAGES } from '@lib/constants/exception.messages.enum';
 
 @Injectable()
 export class EmailService {

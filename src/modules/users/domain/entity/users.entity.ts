@@ -1,4 +1,3 @@
-import { USER_ROLES } from '../../../../constants/user.role.enum';
 import { BeforeInsert, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity.abstract';
 import { IUser } from '../interfaces/user.interface';
@@ -10,6 +9,11 @@ import { PostsEntity } from '../../../posts/domain/entity/posts.entity';
 import { AntiSpamFeedbackTime } from '../../../email/domain/entity/antiSpamFeedbackTime.entity';
 import { hash } from 'bcrypt';
 import { randomUUID } from 'crypto';
+
+export enum USER_ROLES {
+	USER = 'Пользователь',
+	ADMIN = 'Администратор',
+}
 
 @Entity({ name: 'users' })
 export class UsersEntity extends BaseEntity implements IUser {

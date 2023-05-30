@@ -4,8 +4,8 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PostsRepository } from '../../infrastructure/posts.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UsersQueryRepository } from '../../../users/infrastructure/users.query.repository';
-import { EXCEPTION_USER_MESSAGES } from 'src/constants/exception.messages.enum';
 import { UsersRepository } from '../../../users/infrastructure/users.repository';
+import { EXCEPTION_USER_MESSAGES } from '@lib/constants/exception.messages.enum';
 
 export class CreatePostCommand {
 	public userId: string;

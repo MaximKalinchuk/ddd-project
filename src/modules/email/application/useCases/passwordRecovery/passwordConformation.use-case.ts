@@ -2,7 +2,7 @@ import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nes
 import { UsersRepository } from '../../../../users/infrastructure/users.repository';
 import { UsersQueryRepository } from '../../../../users/infrastructure/users.query.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { EXCEPTION_EMAIL_MESSAGES } from 'src/constants/exception.messages.enum';
+import { EXCEPTION_EMAIL_MESSAGES } from '@lib/constants/exception.messages.enum';
 
 export class PasswordConformationCommand {
 	public confirmationCode: string;
