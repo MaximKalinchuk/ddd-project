@@ -25,9 +25,9 @@ export class PostsEntity extends BaseEntity {
 	static create(postData: CreatePostInputModel): PostsEntity {
 		const newPost = new PostsEntity();
 		newPost.id = randomUUID();
-		newPost.title = postData.title;
-		newPost.description = postData.description;
-		newPost.img = postData.img;
+		postData.title && (newPost.title = postData.title);
+		postData.description && (newPost.description = postData.description);
+		postData.img && (newPost.img = postData.img);
 		return newPost;
 	}
 }

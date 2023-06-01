@@ -10,6 +10,7 @@ import { UpdatePostUseCase } from './application/useCases/updatePost.use-case';
 import { DeletePostUseCase } from './application/useCases/deletePost.use-case';
 import { PostsQueryRepository } from './infrastructure/posts.query.repository';
 import { CqrsModule } from '@nestjs/cqrs';
+import { MinioService } from './application/minio.service';
 
 const useCases = [GetPostsByParamsUseCase, CreatePostUseCase, UpdatePostUseCase, DeletePostUseCase];
 
@@ -18,7 +19,7 @@ const adapters = [PostsRepository, PostsQueryRepository];
 @Module({
 	imports: [TypeOrmModule.forFeature([PostsEntity]), CqrsModule, UsersModule],
 	controllers: [PostsController],
-	providers: [...useCases, ...adapters],
+	providers: [...useCases, ...adapters, MinioService],
 	exports: [],
 })
 export class PostsModule {}

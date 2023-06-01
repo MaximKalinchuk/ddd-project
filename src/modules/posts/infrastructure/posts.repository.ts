@@ -6,7 +6,7 @@ import { PostsEntity } from '../domain/entity/posts.entity';
 
 @Injectable()
 export class PostsRepository extends BaseRepository<PostsEntity> {
-	constructor(@InjectRepository(PostsEntity) private readonly postsRepoasitory: Repository<PostsEntity>) {
-		super(postsRepoasitory);
+	constructor(@InjectRepository(PostsEntity) private readonly postsRepository: Repository<PostsEntity>) {
+		super(postsRepository);
 	}
 }

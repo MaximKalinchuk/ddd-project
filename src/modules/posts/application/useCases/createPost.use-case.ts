@@ -39,6 +39,7 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
 		}
 
 		const post = PostsEntity.create(postData);
+		console.log(post);
 		await this.postsRepository.save(post);
 
 		user.posts.push(post);

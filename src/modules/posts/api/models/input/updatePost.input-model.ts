@@ -1,10 +1,12 @@
 import { IsOptional, IsString } from 'class-validator';
 
-export class CreatePostInputModel {
+export class UpdatePostInputModel {
 	@IsString()
+	@IsOptional()
 	title: string;
 
 	@IsString()
+	@IsOptional()
 	description: string;
 
 	@IsString()
