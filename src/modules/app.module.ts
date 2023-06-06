@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
+import { CloudModule } from './cloud/cloud.module';
 
 @Module({
 	imports: [
@@ -21,6 +22,7 @@ import { UsersModule } from './users/users.module';
 		AuthModule,
 		EmailModule,
 		PostsModule,
+		CloudModule,
 	],
 	controllers: [],
 	providers: [

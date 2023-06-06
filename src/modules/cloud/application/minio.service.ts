@@ -25,14 +25,46 @@ export class MinioService {
 		}
 	}
 
-	async uploadFile(file: Express.Multer.File) {
+	async uploadFile(userId: string, file: Express.Multer.File) {
 		const fileName = `${Date.now()}-${file.originalname}`;
-		await this.minioClient.putObject(this.bucketName, fileName, file.buffer, file.size);
+		await this.minioClient.putObject(this.bucketName, userId + '/' + fileName, file.buffer, file.size);
 		return fileName;
 	}
 
 	async getFileUrl(fileName: string) {
 		return await this.minioClient.presignedUrl('GET', this.bucketName, fileName);
+	}
+
+	async getUserFiles(userId: string) {
+		const filesForDownload = [];
+
+		const stream = await this.minioClient.listObjects(this.bucketName, `${userId}`, true);
+		const result = await new Promise((resolve, reject) => {
+			stream.on('data', (obj) =>
+				filesForDownload.push({
+					name: obj.name.split('/').pop(),
+					size: obj.size,
+				}),
+			);
+			stream.on('error', (err) => reject(err));
+			stream.on('end', () => resolve(filesForDownload));
+		});
+
+		await result;
+
+		const fileList = await filesForDownload.map(async (el) => {
+			await this.minioClient.fGetObject(
+				this.bucketName,
+				`${userId}/${el.name}`,
+				`./dist/file-storage/${userId}/${el.name}`,
+			);
+
+			const result = await [el.name, el.size];
+
+			return await result;
+		});
+
+		return fileList;
 	}
 
 	async deleteFile(fileName: string) {
