@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as Minio from 'minio';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 
 @Injectable()
 export class MinioService {
@@ -57,7 +59,15 @@ export class MinioService {
 		return fileList;
 	}
 
-	async deleteFile(fileName: string) {
-		await this.minioClient.removeObject(this.bucketName, fileName);
+	async deleteLocalFiles(userId: string) {
+		const dirPath = path.join('./dist/file-storage/' + userId);
+		const allFilesList = await this.getUserFiles(userId);
+
+		for (const file of allFilesList) {
+			const currentFile = await file;
+			await fs.unlink(`./dist/file-storage/${userId}/${currentFile[0]}`);
+		}
+
+		await fs.rm(dirPath, { recursive: true });
 	}
 }

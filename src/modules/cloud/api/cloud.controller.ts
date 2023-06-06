@@ -46,6 +46,7 @@ export class CloudController {
 			if (typeof user.id === 'string') {
 				const filePath = await this.commandBus.execute(new GetAllFilesCommand(user.id));
 				res.download(`${__dirname}/${filePath}`);
+				await this.minioService.deleteLocalFiles(user.id);
 			}
 		} else {
 			throw new UnauthorizedException();
