@@ -18,16 +18,13 @@ import { PostsEntity } from '../domain/entity/posts.entity';
 import { GetPostsByParamsCommand } from '../application/useCases/pagination.use-case';
 import { CreatePostInputModel } from './models/input/createPost.input-modul';
 import { CreatePostCommand } from '../application/useCases/createPost.use-case';
-import { Request, Response } from 'express';
-import { UpdatePostCommand, UpdatePostUseCase } from '../application/useCases/updatePost.use-case';
+import { Request } from 'express';
+import { UpdatePostCommand } from '../application/useCases/updatePost.use-case';
 import { DeletePostCommand } from '../application/useCases/deletePost.use-case';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 import { CommandBus } from '@nestjs/cqrs';
 import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
 import { UpdatePostInputModel } from './models/input/updatePost.input-model';
-import { MinioService } from '../../cloud/application/minio.service';
-import { AtPublic } from 'src/common/decorators/accessPublic.decorator';
-import { GetAllFilesCommand } from '../../cloud/application/useCases/getAllFiles.use-case';
 
 @Controller('posts')
 export class PostsController {

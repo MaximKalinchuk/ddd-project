@@ -25,16 +25,6 @@ export class MinioService {
 		}
 	}
 
-	async uploadFile(userId: string, file: Express.Multer.File) {
-		const fileName = `${Date.now()}-${file.originalname}`;
-		await this.minioClient.putObject(this.bucketName, userId + '/' + fileName, file.buffer, file.size);
-		return fileName;
-	}
-
-	async getFileUrl(fileName: string) {
-		return await this.minioClient.presignedUrl('GET', this.bucketName, fileName);
-	}
-
 	async getUserFiles(userId: string) {
 		const filesForDownload = [];
 

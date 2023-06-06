@@ -2,6 +2,7 @@ import {
 	Controller,
 	Delete,
 	Get,
+	Logger,
 	Param,
 	Post,
 	Req,
@@ -12,10 +13,12 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { MinioService } from '../application/minio.service';
-import { GetAllFilesCommand } from '../application/useCases/getAllFiles.use-case';
+import { GetAllFilesCommand } from '../application/useCases/queryCommand/getAllFiles.use-case';
 import { CommandBus } from '@nestjs/cqrs';
-import { AtPublic } from '../../../common/decorators/accessPublic.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadFileCommand } from '../application/useCases/uploadFile.use-case';
+import { GetFileCommand } from '../application/useCases/queryCommand/getFile.use-case';
+import { DeleteFileCommand } from '../application/useCases/deleteFile.use-case';
 
 @Controller('cloud')
 export class CloudController {
@@ -28,7 +31,7 @@ export class CloudController {
 		if ('id' in user) {
 			if (typeof user.id === 'string') {
 				await this.minioService.createBucketIfNotExists();
-				const fileName = await this.minioService.uploadFile(user.id, file);
+				const fileName = await this.commandBus.execute(new UploadFileCommand(user.id, file));
 				return fileName;
 			}
 		} else {
@@ -49,16 +52,29 @@ export class CloudController {
 		}
 	}
 
-	@AtPublic()
 	@Get('file/:fileName')
-	async getFile(@Param('fileName') fileName: string) {
-		const fileUrl = await this.minioService.getFileUrl(fileName);
-		return fileUrl;
+	async getFile(@Param('fileName') fileName: string, @Req() req: Request) {
+		const user = req.user;
+		if ('id' in user) {
+			if (typeof user.id === 'string') {
+				const fileUrl = await this.commandBus.execute(new GetFileCommand(fileName, user.id));
+				return fileUrl;
+			}
+		} else {
+			throw new UnauthorizedException();
+		}
 	}
 
 	@Delete('file/:fileName')
-	async deleteFile(@Param('fileName') fileName: string) {
-		await this.minioService.deleteFile(fileName);
-		return fileName;
+	async deleteFile(@Param('fileName') fileName: string, @Req() req: Request) {
+		const user = req.user;
+		if ('id' in user) {
+			if (typeof user.id === 'string') {
+				await this.commandBus.execute(new DeleteFileCommand(fileName, user.id));
+				return fileName;
+			}
+		} else {
+			throw new UnauthorizedException();
+		}
 	}
 }

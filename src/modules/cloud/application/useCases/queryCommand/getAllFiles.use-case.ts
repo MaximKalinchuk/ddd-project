@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { MinioService } from '../minio.service';
+import { MinioService } from '../../minio.service';
 import * as AdmZip from 'adm-zip';
 import * as path from 'path';
 
