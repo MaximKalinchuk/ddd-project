@@ -66,22 +66,7 @@ export class UsersEntity extends BaseEntity implements IUser {
 		newUser.refresh_token = null;
 		newUser.passwordHash = userParams.password;
 		return newUser;
-		// newUser.emailConfirmation.confirmationCode = new EmailConfirmationEntity(this.id, emailParams.confirmationCode);
 	}
-	// constructor(userParams?: UserInputModel, emailParams?: EmailConfirmationInputModel) {
-	// 	super();
-
-	// 	if (userParams && emailParams) {
-	// 		this.username = userParams.username;
-	// 		this.email = userParams.email ?? '';
-	// 		this.passwordHash = userParams.passwordHash ?? '';
-	// 		this.role = userParams.role ?? UserRole.USER;
-	// 		this.refresh_token = userParams.refresh_token ?? null;
-	// 		this.emailConfirmation = new EmailConfirmationEntity(this.id, emailParams.confirmationCode);
-	// this.passwordRecovery = new PasswordRecoveryEntity(this.id);
-	// this.feedbackTime = new AntiSpamFeedbackTime(this.id);
-	// 	}
-	// }
 
 	setRefreshToken(tokenHash: string) {
 		this.refresh_token = tokenHash;
