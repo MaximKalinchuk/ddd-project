@@ -5,6 +5,7 @@ import { UsersEntity } from 'src/modules/users/domain/entity/users.entity';
 import { UsersRepository } from 'src/modules/users/infrastructure/users.repository';
 import { RefreshTokenViewModel } from './dto/view/refreshDecode.view-model';
 import { TokensViewModel } from './dto/view/tokens.view-model';
+import { UserJWT } from './dto/view/user.jwt.view-model';
 const bcrypt = require('bcrypt');
 
 @Injectable()
@@ -16,7 +17,7 @@ export class AuthService {
 	) {}
 
 	async generateTokens(user: UsersEntity): Promise<TokensViewModel> {
-		const payload = { id: user.id, username: user.username, email: user.email, role: user.role };
+		const payload: UserJWT = { id: user.id, username: user.username, email: user.email, role: user.role };
 		const access_token = this.jwtService.sign(
 			{ payload },
 			{

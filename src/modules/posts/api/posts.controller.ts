@@ -13,6 +13,7 @@ import {
 	UseInterceptors,
 	UploadedFile,
 	Res,
+	UseGuards,
 } from '@nestjs/common';
 import { PostsEntity } from '../domain/entity/posts.entity';
 import { GetPostsByParamsCommand } from '../application/useCases/pagination.use-case';
@@ -25,6 +26,9 @@ import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 import { CommandBus } from '@nestjs/cqrs';
 import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
 import { UpdatePostInputModel } from './models/input/updatePost.input-model';
+import { AdminGuard } from 'src/common/guards/admin.guard';
+import { AdminRole } from 'src/common/decorators/adminRole.decotaror';
+import { USER_ROLES } from 'src/modules/users/domain/entity/users.entity';
 
 @Controller('posts')
 export class PostsController {
@@ -57,6 +61,8 @@ export class PostsController {
 	}
 
 	@Post()
+	@UseGuards(AdminGuard)
+	@AdminRole(USER_ROLES.ADMIN)
 	async createPost(@Body() postData: CreatePostInputModel, @Req() req: Request): Promise<PostsEntity> {
 		const user = req.user;
 		if ('id' in user) {
@@ -68,11 +74,15 @@ export class PostsController {
 	}
 
 	@Put(':id')
+	@UseGuards(AdminGuard)
+	@AdminRole(USER_ROLES.ADMIN)
 	async updatePost(@Param('id') id: string, @Body() postData: UpdatePostInputModel): Promise<PostsEntity> {
 		return await this.commandBus.execute(new UpdatePostCommand(id, postData));
 	}
 
 	@Delete(':id')
+	@UseGuards(AdminGuard)
+	@AdminRole(USER_ROLES.ADMIN)
 	async deletePost(@Param('id') id: string): Promise<string> {
 		return await this.commandBus.execute(new DeletePostCommand(id));
 	}
