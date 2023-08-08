@@ -1,8 +1,7 @@
 import { UsersQueryRepository } from 'src/modules/users/infrastructure/users.query.repository';
-import { UsersRepository } from '../../../users/infrastructure/users.repository';
-import { LoginInputModel } from '../../api/models/login.input-model';
+import { LoginInputModel } from '../../api/models/input/login.input-model';
 import { AuthService } from '../auth.service';
-import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TokensViewModel } from '../dto/view/tokens.view-model';
 import { EXCEPTION_USER_MESSAGES } from '@lib/constants/exception.messages.enum';
@@ -30,7 +29,7 @@ export class LoginUseCase implements ICommandHandler<LoginCommand> {
 		const isPasswordValid = await bcrypt.compare(password, userByEmail.passwordHash);
 
 		if (!isPasswordValid) {
-			throw new UnauthorizedException(EXCEPTION_USER_MESSAGES.USER_UNAUTHORIZED_401);
+			throw new UnauthorizedException(EXCEPTION_USER_MESSAGES.USER_PASSWORD_OR_EMAIL_WRONG);
 		}
 
 		if (!userByEmail.emailConfirmation.isConfirmed) {

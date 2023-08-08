@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Logger, Post, Req, Res } from '@nestjs/common';
 import { CreateUserInputModel } from 'src/modules/users/api/models/createUser.input-modal';
 import { RegistrationCommand, RegistrationUseCase } from '../application/useCases/registration.use-case';
-import { LoginInputModel } from './models/login.input-model';
+import { LoginInputModel } from './models/input/login.input-model';
 import { LoginCommand, LoginUseCase } from '../application/useCases/login.use-case';
 import { Request, Response } from 'express';
 import { RefreshCommand, RefreshUseCase } from '../application/useCases/refresh.use-case';

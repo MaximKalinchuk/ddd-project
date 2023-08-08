@@ -3,6 +3,7 @@ export enum EXCEPTION_USER_MESSAGES {
 	USER_USERNAME_400 = 'Пользователь с таким ником уже существует',
 	USER_NOT_FOUND_404 = 'Пользователь не найден',
 	USER_UNAUTHORIZED_401 = 'Пользователь не авторизован',
+	USER_PASSWORD_OR_EMAIL_WRONG = 'Неверный email или пароль',
 	USER_CONFORMATION_UNAUTHORIZED_401 = 'Пожалуйста подтверждите ваш аккаунт. Сообщение для подтверждения было выслано на ваш email',
 }
 
