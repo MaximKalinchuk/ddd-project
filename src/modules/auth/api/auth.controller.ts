@@ -1,4 +1,17 @@
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post, Req, Res } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	HttpCode,
+	HttpStatus,
+	Logger,
+	Param,
+	Post,
+	Query,
+	Req,
+	Res,
+	UseGuards,
+} from '@nestjs/common';
 import { CreateUserInputModel } from 'src/modules/users/api/models/createUser.input-modal';
 import { RegistrationCommand, RegistrationUseCase } from '../application/useCases/registration.use-case';
 import { LoginInputModel } from './models/input/login.input-model';
@@ -9,12 +22,15 @@ import { AtPublic } from 'src/common/decorators/accessPublic.decorator';
 import { LogoutCommand, LogoutUseCase } from '../application/useCases/logout.use-case';
 import { CommandBus } from '@nestjs/cqrs';
 import { AccessToken } from '../application/dto/view/registration.view-model';
+import { GoogleAuthGuard } from 'src/common/guards/google.guard';
+import { HttpService } from '@nestjs/axios';
+import { map } from 'rxjs';
 
 @AtPublic()
 @Controller('auth')
 export class AuthController {
 	private readonly logger = new Logger(AuthController.name);
-	constructor(private readonly commandBus: CommandBus) {}
+	constructor(private readonly commandBus: CommandBus, private readonly httpService: HttpService) {}
 
 	@HttpCode(201)
 	@Post('registration')
@@ -70,5 +86,23 @@ export class AuthController {
 		await this.commandBus.execute(new LogoutCommand(refresh_token));
 		res.clearCookie('refresh_token');
 		return 'Вы успешно вышли из системы.';
+	}
+
+	@UseGuards(GoogleAuthGuard)
+	@Get('google')
+	googleAuth() {}
+
+	@UseGuards(GoogleAuthGuard)
+	@Get('google/callback')
+	googleAuthCallback(@Req() req: Request, @Res() res: Response) {
+		const token = req.user['accessToken'];
+		return res.redirect(`http://localhost:5000/auth/success?token=${token}`);
+	}
+
+	@Get('success')
+	success(@Query('token') token: string) {
+		return this.httpService
+			.get(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`)
+			.pipe(map(({ data }) => data.email));
 	}
 }

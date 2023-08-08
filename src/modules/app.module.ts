@@ -10,6 +10,8 @@ import { EmailModule } from './email/email.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
 import { CloudModule } from './cloud/cloud.module';
+import { GoogleStrategy } from 'src/common/strategies/google.strategy';
+import { GoogleAuthGuard } from 'src/common/guards/google.guard';
 
 @Module({
 	imports: [
